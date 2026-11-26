@@ -8,14 +8,16 @@
 - Docker Desktop đã được khởi động; Docker Engine: `29.1.5`.
 - Docker Compose: `v5.0.1`.
 - `docker run --rm hello-world` chưa thành công: Docker Hub trả `429 Too Many Requests` khi lấy manifest.
-- `wsl --list --quiet` chỉ có `docker-desktop`; chưa có distro Linux dành cho việc chạy Python.
+- Ubuntu WSL2 đã cài thành công bằng `wsl --install -d Ubuntu --no-launch`.
+- Đã tạo user cục bộ `cuonglk` (chưa đặt mật khẩu) và cấu hình user mặc định trong `/etc/wsl.conf`.
+- Python Ubuntu: `3.14.4`; kiểm tra `os.name` trả `posix`.
+- Docker CLI trong Ubuntu báo chưa bật WSL Integration. Đã thử mở Docker Desktop bằng công cụ UI nhưng cửa sổ đang thu nhỏ và công cụ không lấy được cửa sổ để thao tác.
 
 ### Cần xử lý trước khi xác nhận CP0 hoàn thành
 
-1. Cài Ubuntu WSL2 bằng `wsl --install -d Ubuntu`, mở Ubuntu và hoàn tất tạo tài khoản Linux.
-2. Bật Docker Desktop → Settings → Resources → WSL Integration cho Ubuntu.
-3. Đăng nhập Docker Desktop bằng tài khoản Docker Hub nếu có để xử lý giới hạn tải image, rồi chạy lại `docker run --rm hello-world`.
-4. Trong Ubuntu, kiểm tra Python 3.11+ và `python3 -c "import os; print(os.name)"` trả `posix`.
+1. Bật Docker Desktop → Settings → Resources → WSL Integration cho Ubuntu và chọn Apply & restart.
+2. Đăng nhập Docker Desktop bằng tài khoản Docker Hub nếu có để xử lý giới hạn tải image, rồi chạy lại `docker run --rm hello-world`.
+3. Kiểm tra Docker Engine từ Ubuntu sau khi bật tích hợp. Python đã xác nhận chạy trên Linux; môi trường dependency của lab chưa cài.
 
 ## Lộ trình và điều kiện nghiệm thu
 
