@@ -1,0 +1,86 @@
+{
+    "size_bytes":  {
+                       "develop":  426320129,
+                       "advanced":  57409181
+                   },
+    "size_MiB":  {
+                     "develop":  406.5705575942993,
+                     "advanced":  54.749661445617676
+                 },
+    "reduction_percent":  86.53378597565586,
+    "docker_images":  "REPOSITORY   TAG        IMAGE ID                                                                  CREATED              SIZE\nmy-agent     advanced   sha256:cc15f500a1af45cd9867c67555755e0a3db7c46688091e5b33fb8673000c7ee0   About a minute ago   240MB\nmy-agent     develop    sha256:2517a54472f9a9d8c31582078de6b249fbed10ba115dacee8344020518338eab   5 minutes ago        1.67GB",
+    "develop_response":  {
+                             "status":  200,
+                             "headers":  {
+                                             "date":  "Thu, 26 Nov 2026 08:13:05 GMT",
+                                             "server":  "uvicorn",
+                                             "content-length":  "103",
+                                             "content-type":  "application/json",
+                                             "connection":  "close"
+                                         },
+                             "body":  {
+                                          "answer":  "Container lÃ  cÃ¡ch Ä‘Ã³ng gÃ³i app Ä‘á»ƒ cháº¡y á»Ÿ má»i nÆ¡i. Build once, run anywhere!"
+                                      }
+                         },
+    "nginx_health":  {
+                         "status":  200,
+                         "headers":  {
+                                         "Server":  "nginx",
+                                         "Date":  "Thu, 26 Nov 2026 08:13:06 GMT",
+                                         "Content-Type":  "application/json",
+                                         "Content-Length":  "96",
+                                         "Connection":  "close",
+                                         "X-Frame-Options":  "DENY",
+                                         "X-Content-Type-Options":  "nosniff",
+                                         "X-XSS-Protection":  "1; mode=block"
+                                     },
+                         "body":  {
+                                      "status":  "ok",
+                                      "uptime_seconds":  86.6,
+                                      "version":  "2.0.0",
+                                      "timestamp":  "2026-11-26T08:13:06.790876"
+                                  }
+                     },
+    "nginx_ask":  {
+                      "status":  200,
+                      "headers":  {
+                                      "Server":  "nginx",
+                                      "Date":  "Thu, 26 Nov 2026 08:13:06 GMT",
+                                      "Content-Type":  "application/json",
+                                      "Content-Length":  "126",
+                                      "Connection":  "close",
+                                      "X-Frame-Options":  "DENY",
+                                      "X-Content-Type-Options":  "nosniff",
+                                      "X-XSS-Protection":  "1; mode=block"
+                                  },
+                      "body":  {
+                                   "answer":  "ÄÃ¢y lÃ  cÃ¢u tráº£ lá»i tá»« AI agent (mock). Trong production, Ä‘Ã¢y sáº½ lÃ  response tá»« OpenAI/Anthropic."
+                               }
+                  },
+    "docker_images_rows":  [
+                               {
+                                   "Containers":  "0",
+                                   "CreatedAt":  "2026-11-26 15:11:22 +0700 +07",
+                                   "CreatedSince":  "2 minutes ago",
+                                   "Digest":  "\u003cnone\u003e",
+                                   "ID":  "cc15f500a1af",
+                                   "Repository":  "my-agent",
+                                   "SharedSize":  "N/A",
+                                   "Size":  "240MB",
+                                   "Tag":  "advanced",
+                                   "UniqueSize":  "N/A"
+                               },
+                               {
+                                   "Containers":  "0",
+                                   "CreatedAt":  "2026-11-26 15:07:54 +0700 +07",
+                                   "CreatedSince":  "5 minutes ago",
+                                   "Digest":  "\u003cnone\u003e",
+                                   "ID":  "2517a54472f9",
+                                   "Repository":  "my-agent",
+                                   "SharedSize":  "N/A",
+                                   "Size":  "1.67GB",
+                                   "Tag":  "develop",
+                                   "UniqueSize":  "N/A"
+                               }
+                           ]
+}

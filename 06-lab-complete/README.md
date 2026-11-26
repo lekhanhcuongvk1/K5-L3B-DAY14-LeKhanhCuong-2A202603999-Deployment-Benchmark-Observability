@@ -1,7 +1,8 @@
 # Part 6 — Final Project: Production-ready AI Agent
 
-Bạn tự xây một AI agent đủ chuẩn production từ **bản khung** trong thư mục này, kết hợp mọi thứ đã học ở Part 1–5.
-Mọi file đều đã có sẵn, phần việc của bạn nằm ở các chỗ ghi `TODO`. Bản khung chạy được nhưng **chưa đạt tiêu chí nào**.
+Bản làm trên nhánh `cuonglk` đã hoàn thiện từ khung TODO, kết hợp Part 1–5. Bằng chứng kiểm tra được lưu trong `../evidence/cp5-production-ready.txt` và `../evidence/cp5-extra.json`.
+
+Auth trả 401 khi thiếu/sai key; Redis Lua thực hiện sliding window 60 giây và giữ chỗ ngân sách ngày/tháng nguyên tử giữa worker. Input sai trả 422; mất Redis thì `/health` vẫn 200, `/ready` và request cần state trả 503. Uvicorn quản lý signal và hoàn thành request trước lifespan cleanup.
 
 Bài chỉ được tính hoàn thành khi script chấm báo **`PASS 12/12`**:
 
@@ -52,7 +53,7 @@ Script tự khởi động agent của bạn, gọi API thật, build và chạy
 
 ---
 
-## Bản khung
+## Bản khung ban đầu (để đối chiếu bài học)
 
 ```
 06-lab-complete/
@@ -80,6 +81,23 @@ Script tự khởi động agent của bạn, gọi API thật, build và chạy
 ---
 
 ## Chạy local
+
+Với bản làm hiện tại, từ gốc repo trong Ubuntu WSL2:
+
+```bash
+bash scripts/setup_lab.sh
+source ~/.venvs/day14/bin/activate
+cd 06-lab-complete
+cp .env.example .env
+python -c 'from pathlib import Path; import secrets; p=Path(".env"); p.write_text(p.read_text().replace("AGENT_API_KEY=", "AGENT_API_KEY="+secrets.token_urlsafe(32), 1))'
+docker compose -p k5-day14-final up -d --build
+curl http://localhost:8000/health
+curl http://localhost:8000/ready
+```
+
+File `.env` do bạn giữ riêng, Compose tự nạp file này. Khi gọi `/ask`, đọc key từ file riêng vào env/header và không chụp hay dán key vào bài. `check_production_ready.py` tự tạo key/Redis tạm để kiểm tra, không cần dùng key cá nhân. Dọn stack local bằng `docker compose -p k5-day14-final down -v` sau khi thu đủ bằng chứng.
+
+Mẫu khởi chạy nhanh của tài liệu gốc:
 
 ```bash
 pip install -r requirements.txt
@@ -128,6 +146,10 @@ railway domain        # nhận public URL
 ```
 
 **Render:** push repo lên GitHub → Render Dashboard → New → Blueprint → chọn repo (Render đọc `render.yaml`) → điền secret → Deploy.
+
+Blueprint bản làm hiện tại ở `06-lab-complete/render.yaml`: chọn nhánh `cuonglk` và đường dẫn Blueprint này. Web service dùng root `06-lab-complete`, Dockerfile multi-stage, key tự sinh, REDIS_URL tham chiếu Key Value service cùng region. Hướng dẫn và trạng thái triển khai thật ở `../DEPLOYMENT.md`.
+
+Giới hạn: ngân sách áp dụng chung toàn agent; token của mock được ước lượng từ số từ, không phải tokenizer của provider. Reservation bảo vệ request đồng thời nhưng có thể còn giữ tiền tới hết bucket nếu process bị kill giữa chừng. Free Key Value trên cloud không bền qua restart datastore; Compose local dùng Redis AOF và volume. Cần datastore bền vững và cơ chế hoàn reservation hết hạn nếu vận hành thật.
 
 Sau khi deploy: `python check_production_ready.py --public-url <URL>` và ghi URL vào `DEPLOYMENT.md` (xem [DAY14_DELIVERY_CHECKLIST.md](../DAY14_DELIVERY_CHECKLIST.md)).
 
