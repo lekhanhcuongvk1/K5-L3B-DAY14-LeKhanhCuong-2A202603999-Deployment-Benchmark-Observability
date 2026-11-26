@@ -1,18 +1,13 @@
-# Ảnh minh chứng cần nộp
+# Authentic evidence screenshots
 
-Hiện chưa có file ảnh thật trong thư mục này. Không dùng ảnh dựng, ảnh mẫu hoặc ảnh có credential hiện rõ.
+| File | Evidence |
+| --- | --- |
+| dashboard.png | Render service dashboard |
+| running.png | Render Live deployment, commit 283bdca |
+| test.png | Actual cp6-public.json, four HTTP checks passed |
+| grafana-dashboard.png | Three-agent baseline, fixed historical window 16:36:33-16:38:23 GMT+7 |
+| jaeger-slow-trace.png | Slow request and selected LLM span details |
+| jaeger-error-trace.png | Failed request and exception event |
+| prometheus-alert-firing.png | Error and latency alerts simultaneously firing |
 
-## CP6 — cần bổ sung từ Render và kết quả kiểm tra thật
-
-- `dashboard.png`: dashboard service trên Render, thấy tên service và trạng thái.
-- `running.png`: trang deploy thành công (Live), thấy commit triển khai.
-- `test.png`: terminal chạy `python scripts/check_public.py --env-file 06-lab-complete/.env`, thấy bốn status 200 / 200 / 401 / 200. Command không in API key; chụp sau khi chạy thật, không chụp nội dung .env.
-
-Ảnh deploy đã gửi trong chat chưa được lưu thành file trong repo. Không sử dụng ảnh Environment đã gửi trong chat vì ảnh đó hiển thị key.
-
-## CP8 — chụp sau khi stack chạy được
-
-- `grafana-dashboard.png`: dashboard khi có tải.
-- `jaeger-slow-trace.png`: trace chậm, thấy span và thời gian.
-- `jaeger-error-trace.png`: trace lỗi, thấy event exception.
-- `prometheus-alert-firing.png`: trang Alerts thấy ít nhất hai alert cùng firing.
+All images capture real service pages or the actual test report. Native Render and Jaeger JPEG originals are retained in evidence/; PNG conversion changes only file format. No AI-generated screenshots or credential pages are included. Grafana token series use stacked display; the upper curve is cumulative. Numeric measurements are retained separately in JSON/CSV.

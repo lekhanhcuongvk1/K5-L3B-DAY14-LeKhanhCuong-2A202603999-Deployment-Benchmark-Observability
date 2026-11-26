@@ -32,15 +32,14 @@
 | CP3 | Part 4: bằng chứng HTTP 401/200/429, giải thích cost guard | Hoàn thành; evidence/cp3.json và cp3-http.txt |
 | CP4 | Part 5: health/readiness, shutdown, test 3 instance dùng Redis | Hoàn thành; evidence/cp4.json và cp4-stateless.txt |
 | CP5 | Hoàn thiện `06-lab-complete/`, script gốc PASS 12/12 | Hoàn thành; 43/43 checks; evidence/cp5-production-ready.txt |
-| CP6 | Deploy agent Part 6 cùng Redis, URL public và ảnh thật | Live trên main/283bdca; đủ 4 HTTP checks đạt; còn file screenshot trong repo |
+| CP6 | Deploy agent Part 6 cùng Redis, URL public và ảnh thật | Hoàn thành; 4 HTTP checks đạt và 3 ảnh thật trong screenshots/ |
 | CP7 | Load test, eval v1/v2/fixed, quality gate, report JSON | Hoàn thành; v2 fixed 23/23, 0 regression; BENCHMARK_REPORT.md và reports/ |
-| CP8 | Grafana, Jaeger, ít nhất 2 alert cùng firing, CSV scale, đóng gói | Bị chặn khi tải image: Docker Hub HTTP 429; evidence/cp8-startup.txt |
+| CP8 | Grafana, Jaeger, ít nhất 2 alert cùng firing, CSV scale, đóng gói | Hoàn thành; CSV 1/3 instance, trace/log, 4 ảnh và 2 alert cùng firing |
 
 Không sửa script chấm hoặc golden dataset. Không ghi số đo, URL hay ảnh giả. Không commit secret. Mỗi checkpoint hoàn thành có một commit riêng; commit setup này chỉ ghi nhận bước chuẩn bị còn bị chặn.
 
-## Cần người học can thiệp để tiếp tục CP8
+## Hoàn tất CP6–CP8
 
-1. Đăng nhập Docker Desktop bằng tài khoản Docker Hub của mình, rồi thử `docker pull nginx:1.28-alpine`. Nếu đã đăng nhập mà vẫn 429, báo lại kết quả; chưa thể kết luận việc đăng nhập chắc chắn khắc phục giới hạn registry.
-2. Bổ sung ba ảnh cloud vào `screenshots/` theo hướng dẫn trong thư mục đó. Bốn kiểm tra public đã PASS, nhưng chưa có các file ảnh cần nộp.
+Pull trực tiếp các image public đã thành công, không cần đăng nhập Docker Hub. Đã thu đủ bảy ảnh thật. Dockerfile observability được sửa đường dẫn venv; Locust dùng `run --no-deps` để Compose không tự đưa số replica về 2 trong lúc đo 1/3 instance.
 
-Đã thử khởi động stack observability từ Windows và Ubuntu WSL2, đều gặp HTTP 429 khi lấy manifest của Locust hoặc Nginx. Chưa có container observability chạy, chưa có số đo hay ảnh CP8. Không đánh dấu checkpoint hoàn thành. Remote GitHub Actions chưa xác minh được vì API GitHub cũng trả lỗi rate limit; lệnh quality gate tương đương đã PASS ở local.
+Lỗi 429 trước đây được giữ trong evidence/cp8-startup.txt như lịch sử. Kết quả cuối xem BENCHMARK_REPORT.md: hai baseline Locust 100 users/2 phút, trace chậm/lỗi có log cùng trace_id, alert error firing sau 82,52 giây và latency sau 147,67 giây kể từ phase B. Stack đã được dọn sau khi thu bằng chứng. Lượt đo ban đầu sai replica được giữ riêng và loại khỏi bảng chính. Remote GitHub Actions chưa xác minh được vì API GitHub rate limit; quality gate tương đương đã PASS local. Người học còn nộp link repo lên LMS.

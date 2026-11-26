@@ -1,0 +1,57 @@
+[
+  {
+    "ts": "2026-11-26T09:38:19.963626+00:00",
+    "level": "INFO",
+    "service": "observable-agent",
+    "instance": "3a14862687ff",
+    "event": "llm_call",
+    "trace_id": "e5e78f66e2a1f1ce5a68d8cc6cf8d0fe",
+    "span_id": "247601ab68170521",
+    "request_id": "969e00e384d2",
+    "model": "mock-llm-small",
+    "agent_version": "v2",
+    "input_tokens": 95,
+    "output_tokens": 55,
+    "cost_usd": 4.7e-05,
+    "llm_ms": 1684.9
+  },
+  {
+    "ts": "2026-11-26T09:38:19.964097+00:00",
+    "level": "INFO",
+    "service": "observable-agent",
+    "instance": "3a14862687ff",
+    "event": "http_request",
+    "trace_id": "e5e78f66e2a1f1ce5a68d8cc6cf8d0fe",
+    "span_id": "247601ab68170521",
+    "request_id": "969e00e384d2",
+    "method": "POST",
+    "route": "/ask",
+    "status": 200,
+    "ms": 1704.1
+  },
+  {
+    "ts": "2026-11-26T09:38:21.950145+00:00",
+    "level": "INFO",
+    "service": "observable-agent",
+    "instance": "3a14862687ff",
+    "event": "llm_error",
+    "trace_id": "4ee07b02137f8e724af3491cfa7c150f",
+    "span_id": "eb3bea5bb4e4da2b",
+    "request_id": "f43198d25240",
+    "error": "Upstream LLM error: 503 Service Unavailable (mock)"
+  },
+  {
+    "ts": "2026-11-26T09:38:21.950418+00:00",
+    "level": "INFO",
+    "service": "observable-agent",
+    "instance": "3a14862687ff",
+    "event": "http_request",
+    "trace_id": "4ee07b02137f8e724af3491cfa7c150f",
+    "span_id": "eb3bea5bb4e4da2b",
+    "request_id": "f43198d25240",
+    "method": "POST",
+    "route": "/ask",
+    "status": 503,
+    "ms": 96.7
+  }
+]

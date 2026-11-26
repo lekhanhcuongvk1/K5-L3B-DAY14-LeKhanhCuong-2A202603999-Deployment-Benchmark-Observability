@@ -1,0 +1,137 @@
+{
+  "at_utc": "2026-11-26T09:35:57.268285+00:00",
+  "queries": {
+    "p95_seconds": {
+      "expression": "histogram_quantile(0.95,sum by(le)(rate(http_request_duration_seconds_bucket{job=\"agent\",route=\"/ask\"}[1m])))",
+      "response": {
+        "status": "success",
+        "data": {
+          "resultType": "vector",
+          "result": [
+            {
+              "metric": {},
+              "value": [
+                1795685757.273,
+                "0.2931443798449612"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "avg_seconds": {
+      "expression": "sum(rate(http_request_duration_seconds_sum{job=\"agent\",route=\"/ask\"}[1m])) / sum(rate(http_request_duration_seconds_count{job=\"agent\",route=\"/ask\"}[1m]))",
+      "response": {
+        "status": "success",
+        "data": {
+          "resultType": "vector",
+          "result": [
+            {
+              "metric": {},
+              "value": [
+                1795685757.291,
+                "0.23050422386302655"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "rps_by_instance": {
+      "expression": "sum by(instance)(rate(http_requests_total{job=\"agent\",route=\"/ask\"}[1m]))",
+      "response": {
+        "status": "success",
+        "data": {
+          "resultType": "vector",
+          "result": [
+            {
+              "metric": {
+                "instance": "172.24.0.4:8000"
+              },
+              "value": [
+                1795685757.296,
+                "61.729517436997696"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "rps_by_status": {
+      "expression": "sum by(status)(rate(http_requests_total{job=\"agent\",route=\"/ask\"}[1m]))",
+      "response": {
+        "status": "success",
+        "data": {
+          "resultType": "vector",
+          "result": [
+            {
+              "metric": {
+                "status": "200"
+              },
+              "value": [
+                1795685757.3,
+                "61.184043056111136"
+              ]
+            },
+            {
+              "metric": {
+                "status": "503"
+              },
+              "value": [
+                1795685757.3,
+                "0.5454743808865777"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "tokens_by_type": {
+      "expression": "sum by(type)(rate(llm_tokens_total{job=\"agent\"}[1m]))",
+      "response": {
+        "status": "success",
+        "data": {
+          "resultType": "vector",
+          "result": [
+            {
+              "metric": {
+                "type": "input"
+              },
+              "value": [
+                1795685757.322,
+                "4797.06534783083"
+              ]
+            },
+            {
+              "metric": {
+                "type": "output"
+              },
+              "value": [
+                1795685757.322,
+                "2532.9284701261868"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "cost_per_hour": {
+      "expression": "sum(rate(llm_cost_usd_total{job=\"agent\"}[5m]))*3600",
+      "response": {
+        "status": "success",
+        "data": {
+          "resultType": "vector",
+          "result": [
+            {
+              "metric": {},
+              "value": [
+                1795685757.327,
+                "6.168316114849211"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -10,6 +10,8 @@ def report(name):
 
 
 def main():
+    if (ROOT / "evidence/cp8-chaos-timing.json").exists():
+        raise SystemExit("CP8 measured: use finalize_observability_report.py to preserve final evidence.")
     target = ROOT / "BENCHMARK_REPORT.md"
     text = target.read_text(encoding="utf-8")
     text = text.replace("> Copy file này thành `BENCHMARK_REPORT.md` trong repo của bạn và điền đầy đủ.\n> Mọi con số phải lấy từ report JSON / CSV / screenshot thật, không ước lượng.",

@@ -143,3 +143,7 @@ Chúng tôi đã chuẩn bị đầy đủ tài liệu hướng dẫn:
 2. **Trong lab:** Làm theo từng Part, tham khảo [QUICK_REFERENCE.md](QUICK_REFERENCE.md)
 3. **Gặp lỗi:** Xem [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 4. **Sau lab:** Nộp Part 6 Final Project và Part 7 Benchmark Report để chấm điểm (xem [DAY14_DELIVERY_CHECKLIST.md](DAY14_DELIVERY_CHECKLIST.md))
+
+## Completed lab deliverables
+
+See [answers](MISSION_ANSWERS.md), [deployment](DEPLOYMENT.md), [benchmark and observability results](BENCHMARK_REPORT.md), and [checkpoint status](LAB_PROGRESS.md). Raw measurements are in reports/, benchmark-results/ and evidence/; seven authentic screenshots are in screenshots/.

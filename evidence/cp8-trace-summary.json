@@ -1,0 +1,20 @@
+{
+  "sample_traces": 200,
+  "query": {
+    "query.service_name": "observable-agent",
+    "query.search_depth": 200,
+    "query.start_time_min": "2026-11-26T08:38:23.930392+00:00",
+    "query.start_time_max": "2026-11-26T09:38:23.930392+00:00"
+  },
+  "slow_trace_id": "e5e78f66e2a1f1ce5a68d8cc6cf8d0fe",
+  "total_ms": 1704.7375,
+  "longest_span": {
+    "name": "POST /ask",
+    "ms": 1704.7374690000001
+  },
+  "llm_span": {
+    "name": "chat mock-llm-small",
+    "ms": 1685.300181
+  },
+  "error_trace_id": "4ee07b02137f8e724af3491cfa7c150f"
+}
