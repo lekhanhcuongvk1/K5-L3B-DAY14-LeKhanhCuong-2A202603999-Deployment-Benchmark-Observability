@@ -88,6 +88,35 @@ Compose tạo network nội bộ và volume cho Redis/Qdrant, đợi healthcheck
 
 Windows từ chối bind host port 80. Đã sửa mapping thành `127.0.0.1:${HTTP_PORT:-8082}:80`, bỏ mapping 443 vì chưa cấu hình TLS. Qua Nginx `http://localhost:8082/health` → **200**; JSON `POST /ask` → **200**. Chạy bằng project `k5-day14-docker`, đã `down -v` sau khi lưu bằng chứng. Muốn mount dữ liệu ngoài image dùng bind mount hoặc named volume; `.dockerignore` loại venv/cache/secret để không đưa chúng vào build context.
 
+## Part 3 — Cloud Deployment (CP6, chưa hoàn thành)
+
+### Exercise 3.1 hoặc 3.2 — Triển khai
+
+Agent Part 6 đã đạt kiểm tra local; chưa có URL public. Đã chuẩn bị Blueprint Render Free gồm web service và Redis/Key Value, chạy nhánh `cuonglk`, root `06-lab-complete`. Chờ kết nối tài khoản cloud để triển khai và chụp bằng chứng. Trạng thái chính xác: [DEPLOYMENT.md](DEPLOYMENT.md).
+
+### So sánh Railway và Render config
+
+| Nội dung | railway.toml của Part 6 | render.yaml của Part 6 |
+| --- | --- | --- |
+| Phạm vi | Cấu hình build/deploy một service | Blueprint khai báo web service và datastore |
+| Build | DOCKERFILE, Dockerfile | runtime docker, rootDir, dockerfilePath, dockerContext |
+| Health | healthcheckPath /health | healthCheckPath /health |
+| Secret | Đặt ngoài file trong platform env | generateValue cho API key; fromService cho REDIS_URL |
+| Datastore | Tạo/link Redis trên nền tảng riêng | Khai báo Key Value cùng region ngay trong Blueprint |
+| Định dạng | TOML | YAML |
+
+Railway TOML giữ cho hợp đồng chấm; tài liệu Railway hiện tại đánh dấu cấu hình này deprecated, service mới cần phương án cấu hình mới. Render Blueprint được chuẩn bị để triển khai thực tế; không dùng các lệnh mẫu cũ một cách mặc định. Nguồn hiện hành và giới hạn free được liên kết trong DEPLOYMENT.md.
+
+### Exercise 3.3 — Pipeline Cloud Run (đọc config, không deploy)
+
+1. `cloudbuild.yaml` khai báo bước cài requirements và chạy pytest trên Python 3.11-slim.
+2. Bước build phụ thuộc bước test, tạo Docker image gắn cả COMMIT_SHA lẫn latest và tái dùng layer cache từ latest.
+3. Bước push đưa image lên registry, sau đó gcloud deploy image theo COMMIT_SHA lên Cloud Run ở asia-southeast1.
+4. Deployment đặt giới hạn instance 1–10, CPU/memory/timeout, ENVIRONMENT và tham chiếu Secret Manager thay vì nhúng key.
+5. `service.yaml` mô tả cấu hình service tương ứng: concurrency 80, env/secret và probe `/health`, `/ready`; phần này chỉ đọc và giải thích theo rubric K5.
+
+Lưu ý khi đọc mẫu: shell test chưa bật `set -e`, nên câu echo cuối có thể che exit code pytest; muốn dùng thật phải bảo đảm lỗi test dừng pipeline. Chưa chạy hoặc tuyên bố deploy pipeline GCP.
+
 ## Part 4 — API Security (CP3)
 
 ### Exercise 4.1 — API key
@@ -235,3 +264,8 @@ Mục `Public URL ready` của checker xác nhận config deploy, **chưa xác n
 - Codex viết code Part 6 từ khung theo hợp đồng K5: env/auth/Redis/Lua rate limit và budget/log/lifespan/Docker/Compose/deploy config.
 - Codex chạy script chấm gốc đầy đủ, lưu output; kiểm tra thêm input sai, hai worker đồng thời và Redis outage. Đã giữ nguyên script chấm và golden dataset; không dùng số đo mẫu.
 - Người học chưa tự sửa hay tự chạy lại. Cần đọc và giải thích được luồng Redis Lua, cách tính token mock/giữ chỗ ngân sách, lifecycle và các giới hạn ghi ở trên.
+
+### Chuẩn bị CP6
+
+- Codex đọc config Cloud Run, so sánh Railway/Render; tra tài liệu chính thức để chuẩn bị Blueprint và giới hạn Free, viết script kiểm tra bốn endpoint public.
+- Đã tìm thấy tích hợp Render có thể hỗ trợ deploy nhưng chưa được người học cài/kết nối. Chưa có tài nguyên cloud, URL hay screenshot được xác nhận. Người học cần kết nối tài khoản để tiếp tục.
