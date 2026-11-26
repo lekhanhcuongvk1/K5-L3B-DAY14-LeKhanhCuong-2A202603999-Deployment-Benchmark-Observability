@@ -92,7 +92,9 @@ Windows từ chối bind host port 80. Đã sửa mapping thành `127.0.0.1:${HT
 
 ### Exercise 3.1 hoặc 3.2 — Triển khai
 
-Agent Part 6 đã đạt kiểm tra local; chưa có URL public. Đã chuẩn bị Blueprint Render Free gồm web service và Redis/Key Value, chạy nhánh `cuonglk`, root `06-lab-complete`. Chờ kết nối tài khoản cloud để triển khai và chụp bằng chứng. Trạng thái chính xác: [DEPLOYMENT.md](DEPLOYMENT.md).
+URL public: https://k5-l3b-day14-lekhanhcuong-2a202603999.onrender.com . Người học tạo Web Service trực tiếp trên Render, theo dõi nhánh `main` sau khi merge `cuonglk`; ảnh deploy xác nhận Live từ commit `283bdca` lúc 15:41:29 GMT+7 ngày 26/11/2026. Root `06-lab-complete`, Dockerfile và context tương ứng.
+
+Codex kiểm tra trực tiếp lúc 15:45 GMT+7: `/health` **200**, `/ready` **200**, JSON `POST /ask` không key **401**. Bằng chứng: [evidence/cp6-public-partial.json](evidence/cp6-public-partial.json). Còn `/ask` có key và đủ ảnh trong repo; chưa đánh dấu CP6 hoàn thành. Trạng thái chi tiết: [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ### So sánh Railway và Render config
 
@@ -214,7 +216,7 @@ Result: 12/12 tiêu chí đạt · 43/43 checks passed
 
 Kiểm tra bổ sung trong [evidence/cp5-extra.json](evidence/cp5-extra.json): 5 input sai đều 422; thiếu/sai key đều 401; 20 request đồng thời qua hai worker cho đúng 10 response 200 và 10 response 429; dừng Redis thì health 200, ready 503, ask 503.
 
-Mục `Public URL ready` của checker xác nhận config deploy, **chưa xác nhận URL cloud thực tế**. URL và ảnh triển khai thuộc CP6, hiện chưa có. Giới hạn: chi phí của mock là ước lượng token, ngân sách toàn agent; reservation còn giữ tới hết bucket nếu process bị kill trước đối soát. Redis cloud miễn phí không đảm bảo bền dữ liệu qua restart datastore.
+Mục `Public URL ready` của checker tại CP5 chỉ xác nhận config deploy. Kiểm tra URL cloud thực tế được ghi riêng tại Part 3/CP6; không suy ra từ kết quả script local. Giới hạn: chi phí của mock là ước lượng token, ngân sách toàn agent; reservation còn giữ tới hết bucket nếu process bị kill trước đối soát. Redis cloud miễn phí không đảm bảo bền dữ liệu qua restart datastore.
 
 ## AI log
 
@@ -269,3 +271,9 @@ Mục `Public URL ready` của checker xác nhận config deploy, **chưa xác n
 
 - Codex đọc config Cloud Run, so sánh Railway/Render; tra tài liệu chính thức để chuẩn bị Blueprint và giới hạn Free, viết script kiểm tra bốn endpoint public.
 - Đã tìm thấy tích hợp Render có thể hỗ trợ deploy nhưng chưa được người học cài/kết nối. Chưa có tài nguyên cloud, URL hay screenshot được xác nhận. Người học cần kết nối tài khoản để tiếp tục.
+
+### CP6 — kiểm tra URL sau khi người học deploy thủ công
+
+- Người học đã cấu hình Render trên dashboard, gửi ảnh Live và URL public. Theo yêu cầu người học, Codex merge cuonglk vào main và push merge commit 283bdca trước khi deploy.
+- Codex gọi endpoint thật, lưu bằng chứng ba kiểm tra không cần key; bổ sung chế độ public-only và đọc file env riêng cho script để không yêu cầu gửi credential qua chat.
+- Đã chuẩn bị file .env local bị gitignore, key còn trống. Chưa kiểm tra request có key; chưa thu đủ file screenshot trong repo. Người học cần điền key hiện tại vào file riêng và cung cấp ảnh đã che credential để tiếp tục hoàn tất CP6.
