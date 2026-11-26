@@ -1,6 +1,6 @@
 # Tiến độ Day 14
 
-## CP0 — Setup: đang chờ xử lý môi trường
+## CP0 — Setup: hoàn thành
 
 - Repo đã có tên theo mẫu K5 và remote cá nhân.
 - Nhánh làm bài: `cuonglk`.
@@ -13,11 +13,12 @@
 - Python Ubuntu: `3.14.4`; kiểm tra `os.name` trả `posix`.
 - Docker CLI trong Ubuntu báo chưa bật WSL Integration. Đã thử mở Docker Desktop bằng công cụ UI nhưng cửa sổ đang thu nhỏ và công cụ không lấy được cửa sổ để thao tác.
 
-### Cần xử lý trước khi xác nhận CP0 hoàn thành
+### Kiểm tra lại sau khi người học bật WSL Integration
 
-1. Bật Docker Desktop → Settings → Resources → WSL Integration cho Ubuntu và chọn Apply & restart.
-2. Đăng nhập Docker Desktop bằng tài khoản Docker Hub nếu có để xử lý giới hạn tải image, rồi chạy lại `docker run --rm hello-world`.
-3. Kiểm tra Docker Engine từ Ubuntu sau khi bật tích hợp. Python đã xác nhận chạy trên Linux; môi trường dependency của lab chưa cài.
+- `wsl -d Ubuntu --exec id`: user `cuonglk`, thuộc nhóm `docker`.
+- `wsl -d Ubuntu --exec docker version`: client Linux và Engine `29.1.5` phản hồi thành công.
+- `wsl -d Ubuntu --exec docker run --rm hello-world`: exit code 0, in `Hello from Docker!`; lỗi tải image HTTP 429 đã hết trong lần kiểm tra này.
+- Cài Python 3.11 riêng bằng uv để tương thích requirements đã ghim của bài; không đổi Python hệ thống Ubuntu.
 
 ## Lộ trình và điều kiện nghiệm thu
 
@@ -25,7 +26,7 @@
 
 | Checkpoint | Sản phẩm cần có | Trạng thái |
 | --- | --- | --- |
-| CP0 | Python trong WSL2, Docker chạy được hello-world | Chưa hoàn thành |
+| CP0 | Python trong WSL2, Docker chạy được hello-world | Hoàn thành |
 | CP1 | Part 1: anti-pattern, gọi develop, bảng so sánh | Chưa làm |
 | CP2 | Part 2: chạy container, số MB thực đo, test Nginx | Chưa làm |
 | CP3 | Part 4: bằng chứng HTTP 401/200/429, giải thích cost guard | Chưa làm |
