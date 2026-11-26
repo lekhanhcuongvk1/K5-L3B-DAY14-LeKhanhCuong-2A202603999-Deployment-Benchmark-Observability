@@ -94,7 +94,7 @@ Windows từ chối bind host port 80. Đã sửa mapping thành `127.0.0.1:${HT
 
 URL public: https://k5-l3b-day14-lekhanhcuong-2a202603999.onrender.com . Người học tạo Web Service trực tiếp trên Render, theo dõi nhánh `main` sau khi merge `cuonglk`; ảnh deploy xác nhận Live từ commit `283bdca` lúc 15:41:29 GMT+7 ngày 26/11/2026. Root `06-lab-complete`, Dockerfile và context tương ứng.
 
-Codex kiểm tra đủ bốn endpoint lúc 15:49 GMT+7: `/health` **200**, `/ready` **200**, JSON `POST /ask` không key **401**, có key **200** với answer và usage. Key được đọc từ file .env riêng của người học, không ghi vào output hoặc git. Bằng chứng: [evidence/cp6-public.json](evidence/cp6-public.json), complete=true và passed=true. Còn đủ ảnh trong repo trước khi đánh dấu toàn bộ deliverable CP6 hoàn thành. Trạng thái chi tiết: [DEPLOYMENT.md](DEPLOYMENT.md).
+Codex kiểm tra đủ bốn endpoint lúc 15:49 GMT+7: `/health` **200**, `/ready` **200**, JSON `POST /ask` không key **401**, có key **200** với answer và usage. Key được đọc từ file .env riêng của người học, không ghi vào output hoặc git. Bằng chứng: [evidence/cp6-public.json](evidence/cp6-public.json), complete=true và passed=true. Đã lưu đủ ba ảnh thật trong repo, CP6 hoàn thành. Trạng thái chi tiết: [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ### So sánh Railway và Render config
 
