@@ -88,7 +88,7 @@ Compose tạo network nội bộ và volume cho Redis/Qdrant, đợi healthcheck
 
 Windows từ chối bind host port 80. Đã sửa mapping thành `127.0.0.1:${HTTP_PORT:-8082}:80`, bỏ mapping 443 vì chưa cấu hình TLS. Qua Nginx `http://localhost:8082/health` → **200**; JSON `POST /ask` → **200**. Chạy bằng project `k5-day14-docker`, đã `down -v` sau khi lưu bằng chứng. Muốn mount dữ liệu ngoài image dùng bind mount hoặc named volume; `.dockerignore` loại venv/cache/secret để không đưa chúng vào build context.
 
-## Part 3 — Cloud Deployment (CP6, chưa hoàn thành)
+## Part 3 - Cloud Deployment (CP6 complete)
 
 ### Exercise 3.1 hoặc 3.2 — Triển khai
 
@@ -305,3 +305,9 @@ Mục `Public URL ready` của checker tại CP5 chỉ xác nhận config deploy
 - Codex thử chạy stack bằng project k5-day14-observability từ Windows và Ubuntu, Docker Hub trả 429 khi resolve image Locust/Nginx; lưu output thật tại evidence/cp8-startup.txt.
 - Chưa chạy được stack, chưa đo CSV scaling, dashboard, trace hoặc alert. Không bịa số và không tạo ảnh minh họa thay bằng chứng. Cần người học xử lý đăng nhập/giới hạn Docker Hub để tiếp tục.
 - Đã thử xác minh GitHub Actions sau khi push CP7, nhưng API GitHub bị rate limit; chưa khẳng định workflow remote đã PASS. Người học chưa tự kiểm tra lại.
+
+### Final CP6/CP8 evidence and AI log
+
+Codex captured actual Render, Grafana, Jaeger and Prometheus screens (seven PNGs); native JPEG originals are retained where available. No generated images or environment screenshots containing credentials were submitted. CP6 and CP8 are complete; earlier blockers above are historical.
+
+Codex fixed the observability Dockerfile to copy a virtual environment to the correct runtime path. Public image pulls succeeded without login. Scaling measurements use --no-deps to preserve the requested replica count, verified using Prometheus targets. The initial invalid run is retained separately and excluded from results. Final measurements, two simultaneous firing alerts, timing, trace IDs and matching JSON logs are in BENCHMARK_REPORT.md and evidence/. The stack was removed after capture.

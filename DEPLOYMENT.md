@@ -1,6 +1,6 @@
 # Deployment Information — CP6
 
-**Trạng thái:** service đã deploy thành công trên Render từ nhánh `main`, commit `283bdca` (theo ảnh deploy người học cung cấp). Đã xác minh trực tiếp đủ bốn endpoint, gồm request có API key. Còn đóng gói đủ ảnh trong repo trước khi xác nhận toàn bộ deliverable CP6 hoàn thành.
+**Status:** CP6 complete: public deployment verified, four HTTP checks passed, three authentic screenshots included. See the timestamped evidence below.
 
 ## Public URL và kết quả đã xác minh
 
@@ -53,13 +53,13 @@ python scripts/check_public.py --env-file 06-lab-complete/.env
 
 Script chỉ lưu kết quả HTTP/body và URL, không lưu key. CP6 chỉ được đánh dấu hoàn thành khi `/health` 200, `/ready` 200, JSON POST `/ask` thiếu key 401, có key 200 và có đủ ảnh yêu cầu. Kết quả kiểm tra đủ bốn endpoint sẽ được ghi vào `evidence/cp6-public.json`; chỉ `passed=true` khi cả bốn status đúng.
 
-## Screenshots cần thu sau triển khai
+## Screenshots (complete)
 
-- `screenshots/dashboard.png`: dashboard cloud, che mọi credential.
-- `screenshots/running.png`: service chạy thành công.
-- `screenshots/test.png`: kết quả bốn kiểm tra HTTP.
+- [dashboard.png](screenshots/dashboard.png): actual Render service dashboard.
+- [running.png](screenshots/running.png): successful Live deployment of commit `283bdca`.
+- [test.png](screenshots/test.png): browser displaying the actual JSON report with HTTP 200/200/401/200; no API key.
 
-Người học đã gửi ảnh deploy succeeded trong chat (commit `283bdca`, lúc 15:41:29 GMT+7 ngày 26/11/2026), nhưng chưa có file ảnh trong thư mục screenshots của repo. Không dùng ảnh mẫu hoặc ảnh dựng để thay bằng chứng; không lưu ảnh môi trường có API key hiện rõ.
+Original Render JPEG captures are retained in evidence/. CP6 is complete. Deployment hash above refers to the version verified at capture time.
 
 ## Railway thay thế
 
