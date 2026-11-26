@@ -33,7 +33,7 @@
 | CP4 | Part 5: health/readiness, shutdown, test 3 instance dùng Redis | Hoàn thành; evidence/cp4.json và cp4-stateless.txt |
 | CP5 | Hoàn thiện `06-lab-complete/`, script gốc PASS 12/12 | Hoàn thành; 43/43 checks; evidence/cp5-production-ready.txt |
 | CP6 | Deploy agent Part 6 cùng Redis, URL public và ảnh thật | Live trên main/283bdca; đủ 4 HTTP checks đạt; còn file screenshot trong repo |
-| CP7 | Load test, eval v1/v2/fixed, quality gate, report JSON | Chưa làm |
+| CP7 | Load test, eval v1/v2/fixed, quality gate, report JSON | Hoàn thành; v2 fixed 23/23, 0 regression; BENCHMARK_REPORT.md và reports/ |
 | CP8 | Grafana, Jaeger, ít nhất 2 alert cùng firing, CSV scale, đóng gói | Chưa làm |
 
 Không sửa script chấm hoặc golden dataset. Không ghi số đo, URL hay ảnh giả. Không commit secret. Mỗi checkpoint hoàn thành có một commit riêng; commit setup này chỉ ghi nhận bước chuẩn bị còn bị chặn.

@@ -218,6 +218,17 @@ Kiểm tra bổ sung trong [evidence/cp5-extra.json](evidence/cp5-extra.json): 5
 
 Mục `Public URL ready` của checker tại CP5 chỉ xác nhận config deploy. Kiểm tra URL cloud thực tế được ghi riêng tại Part 3/CP6; không suy ra từ kết quả script local. Giới hạn: chi phí của mock là ước lượng token, ngân sách toàn agent; reservation còn giữ tới hết bucket nếu process bị kill trước đối soát. Redis cloud miễn phí không đảm bảo bền dữ liệu qua restart datastore.
 
+## Part 7 — Benchmark local (CP7)
+
+Đã chạy `load_test.py` và `eval/run_eval.py` nguyên bản trên agent develop trong WSL2. Bảng số đo, SLO và giải thích nằm trong [BENCHMARK_REPORT.md](BENCHMARK_REPORT.md). JSON gốc nằm ở cả `06-lab-complete/benchmark-observability/develop/reports/` và `reports/` theo submission.
+
+- Load test: 300 request mỗi mức concurrency 1/10/50/100; cả bốn lượt PASS SLO. Ba lượt slow rate 0/0.03/0.1 dùng concurrency 20; slow rate 0.1 vi phạm p95, giữ nguyên báo cáo FAIL để phân tích.
+- Eval ban đầu: v1 1/23, v2 21/23. Report chỉ ra thiếu tài liệu JWT và HPA; bổ sung KNOWLEDGE_BASE ở develop và production, không sửa golden dataset hoặc thuật toán chấm.
+- Khởi động lại v2 sau sửa: 23/23, min-accuracy 1.0, không regression so với v2 gốc. Chạy lại với baseline cuối cùng theo đường dẫn CI cũng PASS 23/23.
+- Quality gate: v1 so với baseline v2 trả exit 1 và 20 regression. Workflow `.github/workflows/quality-gate.yml` chạy eval và fail theo exit code; muốn ép chặn merge cần đặt job làm required check trên GitHub.
+- Tái tạo: `python scripts/run_benchmarks.py baseline` chỉ chạy trên KB gốc để giữ đúng ý nghĩa baseline; sau khi sửa KB dùng phase `fixed` hoặc `ci`. Không ghi đè các báo cáo baseline đã nộp nếu chỉ kiểm tra lại bản cuối.
+- Cấu hình thí nghiệm và lệnh/exit code được lưu tại `evidence/cp7-commands.json`, raw output tại `evidence/cp7-cli.txt`.
+
 ## AI log
 
 ### Phiên chuẩn bị — CP0
@@ -282,3 +293,9 @@ Mục `Public URL ready` của checker tại CP5 chỉ xác nhận config deploy
 
 - Người học điền key vào .env riêng và xác nhận đã lưu. Codex chạy script đọc file này trong WSL2: health 200, ready 200, thiếu key 401, có key 200.
 - Lưu report JSON không có key; kiểm tra Git chỉ thêm report và tài liệu, không thêm .env. Còn file ảnh minh chứng cloud trong repo; người học chưa tự chạy lại script.
+
+### CP7
+
+- Codex chạy benchmark thật, đọc hai câu v2 sai rồi bổ sung tài liệu JWT/HPA vào KNOWLEDGE_BASE của develop và production. Không sửa golden dataset, load_test.py hay run_eval.py.
+- Codex chạy lại eval sau khi restart, kiểm tra baseline/quality gate, viết workflow CI và điền báo cáo từ JSON bằng script; lưu cả lượt vi phạm SLO thay vì chọn số thuận lợi.
+- Người học chưa tự sửa hay chạy lại; cần hiểu percentile, cost/câu đúng, cách gate phát hiện regression và giới hạn của mock/đo 300 request.
