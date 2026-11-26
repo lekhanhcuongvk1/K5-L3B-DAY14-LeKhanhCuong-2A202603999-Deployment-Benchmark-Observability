@@ -43,6 +43,51 @@ Nhận xét khi đọc code: bản mẫu production chưa phải thiết kế cu
 
 Stateless nghĩa là các instance chia sẻ state bên ngoài process; nếu lưu RAM thì request sau đến instance khác sẽ thiếu history. Dev/prod parity là giảm khác biệt runtime, dependency và dịch vụ phụ thuộc giữa môi trường phát triển và triển khai.
 
+## Part 2 — Docker (CP2)
+
+### Exercise 2.1 — Dockerfile cơ bản
+
+1. Base image: `python:3.11`, gồm Python và hệ điều hành nền; tag có thể thay đổi theo bản cập nhật.
+2. Working directory: `/app`; các lệnh COPY/RUN và command làm việc từ đó.
+3. Copy requirements trước source để layer cài dependency được tái dùng khi chỉ sửa code. `pip --no-cache-dir` không vô hiệu hóa Docker layer cache.
+4. CMD cung cấp command/argument mặc định, bị thay bằng argument sau tên image khi `docker run`. ENTRYPOINT xác định chương trình chính; argument runtime thường được nối vào nó. Exec form giúp signal đến đúng process; shell phải dùng `exec` khi khởi động server.
+
+### Exercise 2.2–2.3 — Build và số đo
+
+Build từ gốc repo:
+
+```bash
+docker build -f 02-docker/develop/Dockerfile -t my-agent:develop .
+docker build -f 02-docker/production/Dockerfile -t my-agent:advanced .
+docker images my-agent
+```
+
+| Image | SIZE từ docker images | Quy về MB thập phân để so sánh |
+| --- | --- | ---: |
+| my-agent:develop | 1.67GB | khoảng 1670 |
+| my-agent:advanced | 240MB | khoảng 240 |
+
+Theo số SIZE hiển thị đã làm tròn, giảm khoảng **85,63%**: `(1670 - 240) / 1670 × 100`.
+Docker Engine này trả trường inspect `.Size` khác SIZE của `docker images`: lần lượt 426320129 và 57409181 byte. File bằng chứng lưu cả hai nguồn; không trộn chúng khi tính phần trăm. Bảng chính dùng `docker images` theo yêu cầu CP2.
+
+Stage builder của production cài gcc/libpq-dev và pip dependencies vào `/root/.local`; runtime bắt đầu lại từ Python slim, chỉ copy packages/source, chạy user appuser. Runtime không mang theo các layer cài build tools. Slim base cũng góp phần giảm image; multi-stage không tự làm nhỏ nếu vẫn copy toàn bộ builder.
+
+Container develop nhận `POST /ask?question=What%20is%20Docker` → 200. Output gốc của `docker images`, kích thước inspect và HTTP response: [evidence/cp2.json](evidence/cp2.json). Tái tạo kiểm tra: `python scripts/check_docker.py` khi stack CP2 đang chạy ở 8082.
+
+### Exercise 2.4 — Compose stack
+
+```mermaid
+flowchart LR
+    C[Client :8082] --> N[Nginx :80]
+    N --> A[Agent :8000]
+    A -. cấu hình REDIS_URL .-> R[Redis :6379]
+    A -. cấu hình QDRANT_URL .-> Q[Qdrant :6333]
+```
+
+Compose tạo network nội bộ và volume cho Redis/Qdrant, đợi healthcheck của chúng trước khi bật agent. App mock mẫu chưa thực sự gọi Redis/Qdrant; đây là các dependency được khai báo cho kiến trúc mở rộng.
+
+Windows từ chối bind host port 80. Đã sửa mapping thành `127.0.0.1:${HTTP_PORT:-8082}:80`, bỏ mapping 443 vì chưa cấu hình TLS. Qua Nginx `http://localhost:8082/health` → **200**; JSON `POST /ask` → **200**. Chạy bằng project `k5-day14-docker`, đã `down -v` sau khi lưu bằng chứng. Muốn mount dữ liệu ngoài image dùng bind mount hoặc named volume; `.dockerignore` loại venv/cache/secret để không đưa chúng vào build context.
+
 ## AI log
 
 ### Phiên chuẩn bị — CP0
@@ -70,3 +115,8 @@ Stateless nghĩa là các instance chia sẻ state bên ngoài process; nếu l�
 - Yêu cầu: thực hiện checkpoint Localhost vs Production.
 - Codex đọc code mẫu, viết phần phân tích và runner kiểm tra HTTP; chạy thật trên WSL2, lưu status/header/body trong `evidence/cp1.json`, không lưu log chứa key giả của ví dụ develop.
 - Người học chưa tự sửa hoặc chạy lại; cần đọc các so sánh và giải thích được các điểm nêu trên khi Lab Coach hỏi.
+
+### CP2
+
+- Codex build hai image, chạy container develop và Compose, đo bằng docker images/inspect, lưu HTTP response; sửa port Nginx sau lỗi bind thực tế trên Windows.
+- Codex viết câu trả lời và lưu số đo thật; người học chưa tự sửa hay chạy lại. Không lấy kích thước mẫu trong README làm kết quả.

@@ -28,7 +28,7 @@
 | --- | --- | --- |
 | CP0 | Python trong WSL2, Docker chạy được hello-world | Hoàn thành |
 | CP1 | Part 1: anti-pattern, gọi develop, bảng so sánh | Hoàn thành; evidence/cp1.json |
-| CP2 | Part 2: chạy container, số MB thực đo, test Nginx | Chưa làm |
+| CP2 | Part 2: chạy container, số MB thực đo, test Nginx | Hoàn thành; evidence/cp2.json; HTTP :8082 |
 | CP3 | Part 4: bằng chứng HTTP 401/200/429, giải thích cost guard | Chưa làm |
 | CP4 | Part 5: health/readiness, shutdown, test 3 instance dùng Redis | Chưa làm |
 | CP5 | Hoàn thiện `06-lab-complete/`, script gốc PASS 12/12 | Chưa làm |
