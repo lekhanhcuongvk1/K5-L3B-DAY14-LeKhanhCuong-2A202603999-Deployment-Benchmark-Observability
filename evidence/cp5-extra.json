@@ -1,0 +1,22 @@
+{
+  "invalid_input_statuses": [
+    422,
+    422,
+    422,
+    422,
+    422
+  ],
+  "unauthorized_statuses": [
+    401,
+    401
+  ],
+  "concurrent_20_requests_2_workers": {
+    "200": 10,
+    "429": 10
+  },
+  "redis_down": {
+    "/health": 200,
+    "/ready": 503
+  },
+  "ask_when_redis_down": 503
+}

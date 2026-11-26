@@ -152,6 +152,41 @@ docker compose -p k5-day14-scaling down -v
 
 Giới hạn của ví dụ: có fallback RAM khi Redis không sẵn sàng lúc khởi động, chưa an toàn để scale trong tình huống đó; update history là read-modify-write nên các request đồng thời cùng session có thể ghi đè. Thử nghiệm hiện tại là tuần tự, chứng minh chia sẻ state qua Redis giữa instance, chưa chứng minh xử lý conflict đồng thời. Part 6 không fallback RAM cho rate limit/budget. Stack CP4 đã dọn sau khi thu bằng chứng.
 
+## Part 6 — Final Project (CP5)
+
+Đã hoàn thiện các module trong `06-lab-complete/app/`, Dockerfile, Compose, ignore, env template và config Railway/Render. Không sửa script chấm hoặc golden dataset.
+
+- Auth: header X-API-Key, so sánh constant-time, từ chối cả khi server chưa cấu hình key.
+- Rate limit: Redis sorted set theo hash API key; Lua dùng Redis TIME để prune/count/add nguyên tử, UUID tránh trùng timestamp giữa worker; vượt giới hạn trả 429 và Retry-After.
+- Budget: giữ chỗ chi phí input và tối đa 512 output token trong bucket UTC ngày/tháng bằng Lua; thiếu ngân sách trả 402 trước LLM. Ghi usage thật bằng transaction, hoàn tiền thừa/lỗi LLM. Bucket cũ được giữ thêm một ngày để request qua nửa đêm vẫn đối soát được.
+- Redis mất kết nối: không fallback RAM, không crash lúc import; `/health` vẫn 200, `/ready` và `/ask` cần state trả 503.
+- Logging: formatter `json.dumps`, có request ID, status và ms, không ghi câu hỏi/key/Redis URL chứa credential.
+- Shutdown: uvicorn giữ signal handler; lifespan đóng Redis sau khi server đã drain request. Docker dùng `exec uvicorn` để server nhận SIGTERM, chạy user non-root và kiểm tra health theo PORT.
+
+Kiểm tra đầy đủ bằng `python scripts/verify_final.py` trên Python 3.11.18 trong WSL2. Output script chấm nguyên bản: [evidence/cp5-production-ready.txt](evidence/cp5-production-ready.txt). Lần cuối **PASS 12/12, 43/43 checks**, image theo trường `.Size` mà checker dùng **63 MB**, Docker stop **1,4 giây**, exit 0.
+
+```text
+📋 Checklist Deliverable
+   ✅ Dockerfile (multi-stage, < 500 MB)
+   ✅ docker-compose.yml (agent + redis)
+   ✅ .dockerignore
+   ✅ Health check endpoint (GET /health)
+   ✅ Readiness endpoint (GET /ready)
+   ✅ API Key authentication
+   ✅ Rate limiting
+   ✅ Cost guard
+   ✅ Config từ environment variables
+   ✅ Structured logging
+   ✅ Graceful shutdown
+   ✅ Public URL ready (Railway / Render config)
+Result: 12/12 tiêu chí đạt · 43/43 checks passed
+🎉 PASS 12/12 — PRODUCTION READY! Deploy nào!
+```
+
+Kiểm tra bổ sung trong [evidence/cp5-extra.json](evidence/cp5-extra.json): 5 input sai đều 422; thiếu/sai key đều 401; 20 request đồng thời qua hai worker cho đúng 10 response 200 và 10 response 429; dừng Redis thì health 200, ready 503, ask 503.
+
+Mục `Public URL ready` của checker xác nhận config deploy, **chưa xác nhận URL cloud thực tế**. URL và ảnh triển khai thuộc CP6, hiện chưa có. Giới hạn: chi phí của mock là ước lượng token, ngân sách toàn agent; reservation còn giữ tới hết bucket nếu process bị kill trước đối soát. Redis cloud miễn phí không đảm bảo bền dữ liệu qua restart datastore.
+
 ## AI log
 
 ### Phiên chuẩn bị — CP0
@@ -194,3 +229,9 @@ Giới hạn của ví dụ: có fallback RAM khi Redis không sẵn sàng lúc 
 
 - Codex chạy health/readiness và SIGTERM thật trên WSL, điều chỉnh entry point của runner theo code mẫu sau khi gặp timeout; chạy Compose ba replica và script stateless gốc, lưu output.
 - Codex viết phân tích giới hạn của demo và dọn stack. Người học chưa tự sửa hoặc chạy lại; cần giải thích được vì sao history đủ qua các instance.
+
+### CP5
+
+- Codex viết code Part 6 từ khung theo hợp đồng K5: env/auth/Redis/Lua rate limit và budget/log/lifespan/Docker/Compose/deploy config.
+- Codex chạy script chấm gốc đầy đủ, lưu output; kiểm tra thêm input sai, hai worker đồng thời và Redis outage. Đã giữ nguyên script chấm và golden dataset; không dùng số đo mẫu.
+- Người học chưa tự sửa hay tự chạy lại. Cần đọc và giải thích được luồng Redis Lua, cách tính token mock/giữ chỗ ngân sách, lifecycle và các giới hạn ghi ở trên.
