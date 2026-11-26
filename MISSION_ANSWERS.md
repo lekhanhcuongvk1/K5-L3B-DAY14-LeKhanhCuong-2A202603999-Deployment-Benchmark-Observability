@@ -88,6 +88,46 @@ Compose tạo network nội bộ và volume cho Redis/Qdrant, đợi healthcheck
 
 Windows từ chối bind host port 80. Đã sửa mapping thành `127.0.0.1:${HTTP_PORT:-8082}:80`, bỏ mapping 443 vì chưa cấu hình TLS. Qua Nginx `http://localhost:8082/health` → **200**; JSON `POST /ask` → **200**. Chạy bằng project `k5-day14-docker`, đã `down -v` sau khi lưu bằng chứng. Muốn mount dữ liệu ngoài image dùng bind mount hoặc named volume; `.dockerignore` loại venv/cache/secret để không đưa chúng vào build context.
 
+## Part 4 — API Security (CP3)
+
+### Exercise 4.1 — API key
+
+`04-api-gateway/develop/app.py` dùng dependency `verify_api_key` đọc `X-API-Key` và so với env `AGENT_API_KEY`. Thiếu/sai key bị từ chối trước khi gọi LLM. Rotate bằng cách tạo key ngẫu nhiên mới, cập nhật env trên server và client rồi restart/redeploy; thu hồi key cũ, không ghi key vào source hay bài nộp.
+
+Output thật từ `curl -i` (đầy đủ trong [evidence/cp3-http.txt](evidence/cp3-http.txt)):
+
+```text
+HTTP/1.1 401 Unauthorized
+{"detail":"Missing API key. Include header: X-API-Key: <your-key>"}
+
+HTTP/1.1 200 OK
+{"question":"Hello","answer":"Đây là câu trả lời từ AI agent (mock). Trong production, đây sẽ là response từ OpenAI/Anthropic."}
+```
+
+### Exercise 4.2–4.3 — JWT và rate limit
+
+Lấy token ở `POST /auth/token` bằng tài khoản demo `student`, sau đó gửi Bearer token cho `/ask`. Token được ký HS256, chứa `sub`, `role`, `iat`, `exp`; server kiểm chữ ký và hạn dùng. Runner tạo JWT_SECRET ngẫu nhiên trong env và không ghi token ra file.
+
+Kết quả vòng lặp: **10 request 200**, request thứ **11 trả 429**. [evidence/cp3.json](evidence/cp3.json) lưu dãy status. Một response tiếp theo từ curl:
+
+```text
+HTTP/1.1 429 Too Many Requests
+x-ratelimit-limit: 10
+x-ratelimit-remaining: 0
+retry-after: 59
+{"detail":{"error":"Rate limit exceeded","limit":10,"window_seconds":60,"retry_after_seconds":59}}
+```
+
+Code mẫu lưu deque timestamp trong RAM, loại request cũ ngoài cửa sổ 60 giây rồi đếm request còn lại: sliding window log, không phải token bucket. User được 10/phút; admin dùng limiter riêng 100/phút, không được miễn hoàn toàn. Vì RAM tách biệt giữa worker và mất khi restart, CP5 chuyển policy state sang Redis và dùng Lua để check/update nguyên tử.
+
+### Exercise 4.4 — Cost guard
+
+Ví dụ Part 4 đã có cost guard trong RAM: tính chi phí input/output token, chặn user với 402 khi hết ngân sách ngày và chặn toàn service với 503 khi hết ngân sách chung. Đây chưa phải quota tháng chia sẻ giữa các instance.
+
+Thiết kế Redis cho $10/tháng: dùng bucket `cost:month:YYYY-MM` (hoặc thêm user ID nếu quota theo user), kiểm tra và giữ chỗ chi phí ước tính trước LLM bằng một Lua script nguyên tử; hết ngân sách trả 402. Sau LLM cộng chi phí thực và trả phần giữ chỗ thừa, lỗi LLM thì hoàn lại. Key hết hạn đầu tháng kế tiếp theo UTC; bucket tháng mới tự bắt đầu từ 0. Part 6 hiện thực cả ngân sách ngày và tháng với cách này.
+
+Rate limit bảo vệ số lần gọi trong một cửa sổ thời gian; cost guard bảo vệ tổng tiền, vì request dài/model đắt có thể tiêu nhiều dù số lần gọi thấp. API key phù hợp giao tiếp service đơn giản; JWT hỗ trợ danh tính/role/hạn dùng; OAuth2 bổ sung luồng ủy quyền khi ứng dụng cần truy cập thay người dùng.
+
 ## AI log
 
 ### Phiên chuẩn bị — CP0
@@ -120,3 +160,8 @@ Windows từ chối bind host port 80. Đã sửa mapping thành `127.0.0.1:${HT
 
 - Codex build hai image, chạy container develop và Compose, đo bằng docker images/inspect, lưu HTTP response; sửa port Nginx sau lỗi bind thực tế trên Windows.
 - Codex viết câu trả lời và lưu số đo thật; người học chưa tự sửa hay chạy lại. Không lấy kích thước mẫu trong README làm kết quả.
+
+### CP3
+
+- Codex đọc auth/rate limiter/cost guard, chạy API key và JWT flow thật; lưu raw curl 401/200/429 cùng dãy status, không lưu credential sinh trong phiên.
+- Codex viết giải thích và thiết kế quota Redis; người học chưa tự sửa hoặc chạy lại. Runner có assertion đúng 10 lần 200 trước 429.
