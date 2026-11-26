@@ -1,0 +1,476 @@
+{
+  "traceID": "4ee07b02137f8e724af3491cfa7c150f",
+  "spans": [
+    {
+      "operationName": "agent.retrieve_context",
+      "startTime": 1795685901854413.0,
+      "duration": 15969.988,
+      "otlp": {
+        "traceId": "4ee07b02137f8e724af3491cfa7c150f",
+        "spanId": "68bc0614fbee1d68",
+        "parentSpanId": "b8f2cbfc0f8dbc40",
+        "flags": 256,
+        "name": "agent.retrieve_context",
+        "kind": 1,
+        "startTimeUnixNano": "1795685901854412972",
+        "endTimeUnixNano": "1795685901870382960",
+        "attributes": [
+          {
+            "key": "retrieval.documents",
+            "value": {
+              "intValue": "1"
+            }
+          }
+        ],
+        "status": {}
+      },
+      "resource": {
+        "attributes": [
+          {
+            "key": "agent.version",
+            "value": {
+              "stringValue": "v2"
+            }
+          },
+          {
+            "key": "deployment.environment.name",
+            "value": {
+              "stringValue": "lab"
+            }
+          },
+          {
+            "key": "service.instance.id",
+            "value": {
+              "stringValue": "3a14862687ff"
+            }
+          },
+          {
+            "key": "service.name",
+            "value": {
+              "stringValue": "observable-agent"
+            }
+          },
+          {
+            "key": "service.version",
+            "value": {
+              "stringValue": "1.0.0"
+            }
+          },
+          {
+            "key": "telemetry.sdk.language",
+            "value": {
+              "stringValue": "python"
+            }
+          },
+          {
+            "key": "telemetry.sdk.name",
+            "value": {
+              "stringValue": "opentelemetry"
+            }
+          },
+          {
+            "key": "telemetry.sdk.version",
+            "value": {
+              "stringValue": "1.45.2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "operationName": "chat mock-llm-small",
+      "startTime": 1795685901870475.5,
+      "duration": 79450.632,
+      "otlp": {
+        "traceId": "4ee07b02137f8e724af3491cfa7c150f",
+        "spanId": "b4ff3633db44e34c",
+        "parentSpanId": "b8f2cbfc0f8dbc40",
+        "flags": 256,
+        "name": "chat mock-llm-small",
+        "kind": 1,
+        "startTimeUnixNano": "1795685901870475557",
+        "endTimeUnixNano": "1795685901949926189",
+        "attributes": [
+          {
+            "key": "error.type",
+            "value": {
+              "stringValue": "upstream_unavailable"
+            }
+          },
+          {
+            "key": "gen_ai.operation.name",
+            "value": {
+              "stringValue": "chat"
+            }
+          },
+          {
+            "key": "gen_ai.provider.name",
+            "value": {
+              "stringValue": "mock"
+            }
+          },
+          {
+            "key": "gen_ai.request.model",
+            "value": {
+              "stringValue": "mock-llm-small"
+            }
+          }
+        ],
+        "events": [
+          {
+            "timeUnixNano": "1795685901949895390",
+            "name": "exception",
+            "attributes": [
+              {
+                "key": "exception.escaped",
+                "value": {
+                  "stringValue": "False"
+                }
+              },
+              {
+                "key": "exception.message",
+                "value": {
+                  "stringValue": "Upstream LLM error: 503 Service Unavailable (mock)"
+                }
+              },
+              {
+                "key": "exception.stacktrace",
+                "value": {
+                  "stringValue": "Traceback (most recent call last):\n  File \"/app/app/main.py\", line 153, in run_agent\n    result = await mock_llm.generate(question, context=context,\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/utils/mock_llm.py\", line 206, in generate\n    raise LLMError(\"Upstream LLM error: 503 Service Unavailable (mock)\")\nutils.mock_llm.LLMError: Upstream LLM error: 503 Service Unavailable (mock)\n"
+                }
+              },
+              {
+                "key": "exception.type",
+                "value": {
+                  "stringValue": "utils.mock_llm.LLMError"
+                }
+              }
+            ]
+          }
+        ],
+        "status": {
+          "message": "LLMError: Upstream LLM error: 503 Service Unavailable (mock)",
+          "code": 2
+        }
+      },
+      "resource": {
+        "attributes": [
+          {
+            "key": "agent.version",
+            "value": {
+              "stringValue": "v2"
+            }
+          },
+          {
+            "key": "deployment.environment.name",
+            "value": {
+              "stringValue": "lab"
+            }
+          },
+          {
+            "key": "service.instance.id",
+            "value": {
+              "stringValue": "3a14862687ff"
+            }
+          },
+          {
+            "key": "service.name",
+            "value": {
+              "stringValue": "observable-agent"
+            }
+          },
+          {
+            "key": "service.version",
+            "value": {
+              "stringValue": "1.0.0"
+            }
+          },
+          {
+            "key": "telemetry.sdk.language",
+            "value": {
+              "stringValue": "python"
+            }
+          },
+          {
+            "key": "telemetry.sdk.name",
+            "value": {
+              "stringValue": "opentelemetry"
+            }
+          },
+          {
+            "key": "telemetry.sdk.version",
+            "value": {
+              "stringValue": "1.45.2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "operationName": "agent.run",
+      "startTime": 1795685901854384.2,
+      "duration": 95727.719,
+      "otlp": {
+        "traceId": "4ee07b02137f8e724af3491cfa7c150f",
+        "spanId": "b8f2cbfc0f8dbc40",
+        "parentSpanId": "eb3bea5bb4e4da2b",
+        "flags": 256,
+        "name": "agent.run",
+        "kind": 1,
+        "startTimeUnixNano": "1795685901854384126",
+        "endTimeUnixNano": "1795685901950111845",
+        "attributes": [
+          {
+            "key": "agent.question.length",
+            "value": {
+              "intValue": "51"
+            }
+          },
+          {
+            "key": "agent.version",
+            "value": {
+              "stringValue": "v2"
+            }
+          }
+        ],
+        "events": [
+          {
+            "timeUnixNano": "1795685901950106685",
+            "name": "exception",
+            "attributes": [
+              {
+                "key": "exception.escaped",
+                "value": {
+                  "stringValue": "False"
+                }
+              },
+              {
+                "key": "exception.message",
+                "value": {
+                  "stringValue": "Upstream LLM error: 503 Service Unavailable (mock)"
+                }
+              },
+              {
+                "key": "exception.stacktrace",
+                "value": {
+                  "stringValue": "Traceback (most recent call last):\n  File \"/opt/venv/lib/python3.11/site-packages/opentelemetry/trace/__init__.py\", line 602, in use_span\n    yield span\n  File \"/opt/venv/lib/python3.11/site-packages/opentelemetry/sdk/trace/__init__.py\", line 1136, in start_as_current_span\n    yield span\n  File \"/opt/venv/lib/python3.11/site-packages/opentelemetry/trace/__init__.py\", line 441, in start_as_current_span\n    yield span\n  File \"/app/app/main.py\", line 153, in run_agent\n    result = await mock_llm.generate(question, context=context,\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/utils/mock_llm.py\", line 206, in generate\n    raise LLMError(\"Upstream LLM error: 503 Service Unavailable (mock)\")\nutils.mock_llm.LLMError: Upstream LLM error: 503 Service Unavailable (mock)\n"
+                }
+              },
+              {
+                "key": "exception.type",
+                "value": {
+                  "stringValue": "utils.mock_llm.LLMError"
+                }
+              }
+            ]
+          }
+        ],
+        "status": {
+          "message": "LLMError: Upstream LLM error: 503 Service Unavailable (mock)",
+          "code": 2
+        }
+      },
+      "resource": {
+        "attributes": [
+          {
+            "key": "agent.version",
+            "value": {
+              "stringValue": "v2"
+            }
+          },
+          {
+            "key": "deployment.environment.name",
+            "value": {
+              "stringValue": "lab"
+            }
+          },
+          {
+            "key": "service.instance.id",
+            "value": {
+              "stringValue": "3a14862687ff"
+            }
+          },
+          {
+            "key": "service.name",
+            "value": {
+              "stringValue": "observable-agent"
+            }
+          },
+          {
+            "key": "service.version",
+            "value": {
+              "stringValue": "1.0.0"
+            }
+          },
+          {
+            "key": "telemetry.sdk.language",
+            "value": {
+              "stringValue": "python"
+            }
+          },
+          {
+            "key": "telemetry.sdk.name",
+            "value": {
+              "stringValue": "opentelemetry"
+            }
+          },
+          {
+            "key": "telemetry.sdk.version",
+            "value": {
+              "stringValue": "1.45.2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "operationName": "POST /ask",
+      "startTime": 1795685901853416.5,
+      "duration": 97317.632,
+      "otlp": {
+        "traceId": "4ee07b02137f8e724af3491cfa7c150f",
+        "spanId": "eb3bea5bb4e4da2b",
+        "flags": 256,
+        "name": "POST /ask",
+        "kind": 2,
+        "startTimeUnixNano": "1795685901853416574",
+        "endTimeUnixNano": "1795685901950734206",
+        "attributes": [
+          {
+            "key": "http.flavor",
+            "value": {
+              "stringValue": "1.1"
+            }
+          },
+          {
+            "key": "http.host",
+            "value": {
+              "stringValue": "172.24.0.4:8000"
+            }
+          },
+          {
+            "key": "http.method",
+            "value": {
+              "stringValue": "POST"
+            }
+          },
+          {
+            "key": "http.route",
+            "value": {
+              "stringValue": "/ask"
+            }
+          },
+          {
+            "key": "http.scheme",
+            "value": {
+              "stringValue": "http"
+            }
+          },
+          {
+            "key": "http.server_name",
+            "value": {
+              "stringValue": "nginx"
+            }
+          },
+          {
+            "key": "http.status_code",
+            "value": {
+              "intValue": "503"
+            }
+          },
+          {
+            "key": "http.target",
+            "value": {
+              "stringValue": "/ask"
+            }
+          },
+          {
+            "key": "http.url",
+            "value": {
+              "stringValue": "http://nginx/ask"
+            }
+          },
+          {
+            "key": "http.user_agent",
+            "value": {
+              "stringValue": "python-requests/2.34.2"
+            }
+          },
+          {
+            "key": "net.host.port",
+            "value": {
+              "intValue": "8000"
+            }
+          },
+          {
+            "key": "net.peer.ip",
+            "value": {
+              "stringValue": "172.24.0.6"
+            }
+          },
+          {
+            "key": "net.peer.port",
+            "value": {
+              "intValue": "42122"
+            }
+          }
+        ],
+        "status": {
+          "code": 2
+        }
+      },
+      "resource": {
+        "attributes": [
+          {
+            "key": "agent.version",
+            "value": {
+              "stringValue": "v2"
+            }
+          },
+          {
+            "key": "deployment.environment.name",
+            "value": {
+              "stringValue": "lab"
+            }
+          },
+          {
+            "key": "service.instance.id",
+            "value": {
+              "stringValue": "3a14862687ff"
+            }
+          },
+          {
+            "key": "service.name",
+            "value": {
+              "stringValue": "observable-agent"
+            }
+          },
+          {
+            "key": "service.version",
+            "value": {
+              "stringValue": "1.0.0"
+            }
+          },
+          {
+            "key": "telemetry.sdk.language",
+            "value": {
+              "stringValue": "python"
+            }
+          },
+          {
+            "key": "telemetry.sdk.name",
+            "value": {
+              "stringValue": "opentelemetry"
+            }
+          },
+          {
+            "key": "telemetry.sdk.version",
+            "value": {
+              "stringValue": "1.45.2"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

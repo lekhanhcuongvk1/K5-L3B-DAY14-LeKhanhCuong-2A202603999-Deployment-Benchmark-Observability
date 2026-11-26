@@ -1,0 +1,40 @@
+{
+  "base_url": "https://k5-l3b-day14-lekhanhcuong-2a202603999.onrender.com",
+  "checked_at_utc": "2026-11-26T08:49:13.697554+00:00",
+  "checks": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "authenticated": false,
+      "expected": 200,
+      "status": 200,
+      "body": "{\"status\":\"ok\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/ready",
+      "authenticated": false,
+      "expected": 200,
+      "status": 200,
+      "body": "{\"ready\":true}"
+    },
+    {
+      "method": "POST",
+      "path": "/ask",
+      "authenticated": false,
+      "expected": 401,
+      "status": 401,
+      "body": "{\"detail\":\"Missing or invalid API key\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/ask",
+      "authenticated": true,
+      "expected": 200,
+      "status": 200,
+      "body": "{\"question\":\"Hello\",\"answer\":\"Agent đang hoạt động tốt! (mock response) Hỏi thêm câu hỏi đi nhé.\",\"usage\":{\"input_tokens\":2,\"output_tokens\":26,\"cost_usd\":1.59e-05}}"
+    }
+  ],
+  "complete": true,
+  "passed": true
+}

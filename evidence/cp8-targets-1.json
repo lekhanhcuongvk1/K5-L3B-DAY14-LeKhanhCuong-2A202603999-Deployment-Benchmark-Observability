@@ -1,0 +1,29 @@
+[
+  {
+    "discoveredLabels": {
+      "__address__": "172.24.0.4:8000",
+      "__always_scrape_classic_histograms__": "false",
+      "__convert_classic_histograms_to_nhcb__": "false",
+      "__meta_dns_name": "agent",
+      "__metrics_path__": "/metrics",
+      "__scheme__": "http",
+      "__scrape_interval__": "5s",
+      "__scrape_native_histograms__": "false",
+      "__scrape_timeout__": "5s",
+      "job": "agent"
+    },
+    "labels": {
+      "instance": "172.24.0.4:8000",
+      "job": "agent"
+    },
+    "scrapePool": "agent",
+    "scrapeUrl": "http://172.24.0.4:8000/metrics",
+    "globalUrl": "http://172.24.0.4:8000/metrics",
+    "lastError": "",
+    "lastScrape": "2026-11-26T09:33:54.654648314Z",
+    "lastScrapeDuration": 0.002300837,
+    "health": "up",
+    "scrapeInterval": "5s",
+    "scrapeTimeout": "5s"
+  }
+]

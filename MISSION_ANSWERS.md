@@ -88,11 +88,13 @@ Compose tạo network nội bộ và volume cho Redis/Qdrant, đợi healthcheck
 
 Windows từ chối bind host port 80. Đã sửa mapping thành `127.0.0.1:${HTTP_PORT:-8082}:80`, bỏ mapping 443 vì chưa cấu hình TLS. Qua Nginx `http://localhost:8082/health` → **200**; JSON `POST /ask` → **200**. Chạy bằng project `k5-day14-docker`, đã `down -v` sau khi lưu bằng chứng. Muốn mount dữ liệu ngoài image dùng bind mount hoặc named volume; `.dockerignore` loại venv/cache/secret để không đưa chúng vào build context.
 
-## Part 3 — Cloud Deployment (CP6, chưa hoàn thành)
+## Part 3 - Cloud Deployment (CP6 complete)
 
 ### Exercise 3.1 hoặc 3.2 — Triển khai
 
-Agent Part 6 đã đạt kiểm tra local; chưa có URL public. Đã chuẩn bị Blueprint Render Free gồm web service và Redis/Key Value, chạy nhánh `cuonglk`, root `06-lab-complete`. Chờ kết nối tài khoản cloud để triển khai và chụp bằng chứng. Trạng thái chính xác: [DEPLOYMENT.md](DEPLOYMENT.md).
+URL public: https://k5-l3b-day14-lekhanhcuong-2a202603999.onrender.com . Người học tạo Web Service trực tiếp trên Render, theo dõi nhánh `main` sau khi merge `cuonglk`; ảnh deploy xác nhận Live từ commit `283bdca` lúc 15:41:29 GMT+7 ngày 26/11/2026. Root `06-lab-complete`, Dockerfile và context tương ứng.
+
+Codex kiểm tra đủ bốn endpoint lúc 15:49 GMT+7: `/health` **200**, `/ready` **200**, JSON `POST /ask` không key **401**, có key **200** với answer và usage. Key được đọc từ file .env riêng của người học, không ghi vào output hoặc git. Bằng chứng: [evidence/cp6-public.json](evidence/cp6-public.json), complete=true và passed=true. Đã lưu đủ ba ảnh thật trong repo, CP6 hoàn thành. Trạng thái chi tiết: [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ### So sánh Railway và Render config
 
@@ -214,7 +216,18 @@ Result: 12/12 tiêu chí đạt · 43/43 checks passed
 
 Kiểm tra bổ sung trong [evidence/cp5-extra.json](evidence/cp5-extra.json): 5 input sai đều 422; thiếu/sai key đều 401; 20 request đồng thời qua hai worker cho đúng 10 response 200 và 10 response 429; dừng Redis thì health 200, ready 503, ask 503.
 
-Mục `Public URL ready` của checker xác nhận config deploy, **chưa xác nhận URL cloud thực tế**. URL và ảnh triển khai thuộc CP6, hiện chưa có. Giới hạn: chi phí của mock là ước lượng token, ngân sách toàn agent; reservation còn giữ tới hết bucket nếu process bị kill trước đối soát. Redis cloud miễn phí không đảm bảo bền dữ liệu qua restart datastore.
+Mục `Public URL ready` của checker tại CP5 chỉ xác nhận config deploy. Kiểm tra URL cloud thực tế được ghi riêng tại Part 3/CP6; không suy ra từ kết quả script local. Giới hạn: chi phí của mock là ước lượng token, ngân sách toàn agent; reservation còn giữ tới hết bucket nếu process bị kill trước đối soát. Redis cloud miễn phí không đảm bảo bền dữ liệu qua restart datastore.
+
+## Part 7 — Benchmark local (CP7)
+
+Đã chạy `load_test.py` và `eval/run_eval.py` nguyên bản trên agent develop trong WSL2. Bảng số đo, SLO và giải thích nằm trong [BENCHMARK_REPORT.md](BENCHMARK_REPORT.md). JSON gốc nằm ở cả `06-lab-complete/benchmark-observability/develop/reports/` và `reports/` theo submission.
+
+- Load test: 300 request mỗi mức concurrency 1/10/50/100; cả bốn lượt PASS SLO. Ba lượt slow rate 0/0.03/0.1 dùng concurrency 20; slow rate 0.1 vi phạm p95, giữ nguyên báo cáo FAIL để phân tích.
+- Eval ban đầu: v1 1/23, v2 21/23. Report chỉ ra thiếu tài liệu JWT và HPA; bổ sung KNOWLEDGE_BASE ở develop và production, không sửa golden dataset hoặc thuật toán chấm.
+- Khởi động lại v2 sau sửa: 23/23, min-accuracy 1.0, không regression so với v2 gốc. Chạy lại với baseline cuối cùng theo đường dẫn CI cũng PASS 23/23.
+- Quality gate: v1 so với baseline v2 trả exit 1 và 20 regression. Workflow `.github/workflows/quality-gate.yml` chạy eval và fail theo exit code; muốn ép chặn merge cần đặt job làm required check trên GitHub.
+- Tái tạo: `python scripts/run_benchmarks.py baseline` chỉ chạy trên KB gốc để giữ đúng ý nghĩa baseline; sau khi sửa KB dùng phase `fixed` hoặc `ci`. Không ghi đè các báo cáo baseline đã nộp nếu chỉ kiểm tra lại bản cuối.
+- Cấu hình thí nghiệm và lệnh/exit code được lưu tại `evidence/cp7-commands.json`, raw output tại `evidence/cp7-cli.txt`.
 
 ## AI log
 
@@ -269,3 +282,32 @@ Mục `Public URL ready` của checker xác nhận config deploy, **chưa xác n
 
 - Codex đọc config Cloud Run, so sánh Railway/Render; tra tài liệu chính thức để chuẩn bị Blueprint và giới hạn Free, viết script kiểm tra bốn endpoint public.
 - Đã tìm thấy tích hợp Render có thể hỗ trợ deploy nhưng chưa được người học cài/kết nối. Chưa có tài nguyên cloud, URL hay screenshot được xác nhận. Người học cần kết nối tài khoản để tiếp tục.
+
+### CP6 — kiểm tra URL sau khi người học deploy thủ công
+
+- Người học đã cấu hình Render trên dashboard, gửi ảnh Live và URL public. Theo yêu cầu người học, Codex merge cuonglk vào main và push merge commit 283bdca trước khi deploy.
+- Codex gọi endpoint thật, lưu bằng chứng ba kiểm tra không cần key; bổ sung chế độ public-only và đọc file env riêng cho script để không yêu cầu gửi credential qua chat.
+- Đã chuẩn bị file .env local bị gitignore, key còn trống. Chưa kiểm tra request có key; chưa thu đủ file screenshot trong repo. Người học cần điền key hiện tại vào file riêng và cung cấp ảnh đã che credential để tiếp tục hoàn tất CP6.
+
+### CP6 — xác thực public hoàn tất
+
+- Người học điền key vào .env riêng và xác nhận đã lưu. Codex chạy script đọc file này trong WSL2: health 200, ready 200, thiếu key 401, có key 200.
+- Lưu report JSON không có key; kiểm tra Git chỉ thêm report và tài liệu, không thêm .env. Còn file ảnh minh chứng cloud trong repo; người học chưa tự chạy lại script.
+
+### CP7
+
+- Codex chạy benchmark thật, đọc hai câu v2 sai rồi bổ sung tài liệu JWT/HPA vào KNOWLEDGE_BASE của develop và production. Không sửa golden dataset, load_test.py hay run_eval.py.
+- Codex chạy lại eval sau khi restart, kiểm tra baseline/quality gate, viết workflow CI và điền báo cáo từ JSON bằng script; lưu cả lượt vi phạm SLO thay vì chọn số thuận lợi.
+- Người học chưa tự sửa hay chạy lại; cần hiểu percentile, cost/câu đúng, cách gate phát hiện regression và giới hạn của mock/đo 300 request.
+
+### CP8 — lỗi khởi động stack
+
+- Codex thử chạy stack bằng project k5-day14-observability từ Windows và Ubuntu, Docker Hub trả 429 khi resolve image Locust/Nginx; lưu output thật tại evidence/cp8-startup.txt.
+- Chưa chạy được stack, chưa đo CSV scaling, dashboard, trace hoặc alert. Không bịa số và không tạo ảnh minh họa thay bằng chứng. Cần người học xử lý đăng nhập/giới hạn Docker Hub để tiếp tục.
+- Đã thử xác minh GitHub Actions sau khi push CP7, nhưng API GitHub bị rate limit; chưa khẳng định workflow remote đã PASS. Người học chưa tự kiểm tra lại.
+
+### Final CP6/CP8 evidence and AI log
+
+Codex captured actual Render, Grafana, Jaeger and Prometheus screens (seven PNGs); native JPEG originals are retained where available. No generated images or environment screenshots containing credentials were submitted. CP6 and CP8 are complete; earlier blockers above are historical.
+
+Codex fixed the observability Dockerfile to copy a virtual environment to the correct runtime path. Public image pulls succeeded without login. Scaling measurements use --no-deps to preserve the requested replica count, verified using Prometheus targets. The initial invalid run is retained separately and excluded from results. Final measurements, two simultaneous firing alerts, timing, trace IDs and matching JSON logs are in BENCHMARK_REPORT.md and evidence/. The stack was removed after capture.

@@ -1,0 +1,32 @@
+{
+  "base_url": "https://k5-l3b-day14-lekhanhcuong-2a202603999.onrender.com",
+  "checked_at_utc": "2026-11-26T08:45:46.822880+00:00",
+  "checks": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "authenticated": false,
+      "expected": 200,
+      "status": 200,
+      "body": "{\"status\":\"ok\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/ready",
+      "authenticated": false,
+      "expected": 200,
+      "status": 200,
+      "body": "{\"ready\":true}"
+    },
+    {
+      "method": "POST",
+      "path": "/ask",
+      "authenticated": false,
+      "expected": 401,
+      "status": 401,
+      "body": "{\"detail\":\"Missing or invalid API key\"}"
+    }
+  ],
+  "complete": false,
+  "passed": false
+}

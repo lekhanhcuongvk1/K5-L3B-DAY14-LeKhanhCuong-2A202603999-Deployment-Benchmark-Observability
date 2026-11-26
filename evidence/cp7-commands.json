@@ -1,0 +1,186 @@
+[
+  {
+    "started_at_utc": "2026-11-26T08:51:01.576469+00:00",
+    "command": [
+      "python",
+      "eval/run_eval.py",
+      "--url",
+      "http://localhost:8001",
+      "--out",
+      "reports/eval_v1.json"
+    ],
+    "exit_code": 1
+  },
+  {
+    "started_at_utc": "2026-11-26T08:51:05.676232+00:00",
+    "command": [
+      "python",
+      "eval/run_eval.py",
+      "--url",
+      "http://localhost:8002",
+      "--out",
+      "reports/eval_v2.json",
+      "--baseline",
+      "reports/eval_v1.json"
+    ],
+    "exit_code": 0
+  },
+  {
+    "started_at_utc": "2026-11-26T08:51:10.165228+00:00",
+    "command": [
+      "python",
+      "eval/run_eval.py",
+      "--url",
+      "http://localhost:8001",
+      "--baseline",
+      "reports/eval_v2.json",
+      "--out",
+      "reports/eval_v1_regression.json"
+    ],
+    "exit_code": 1
+  },
+  {
+    "started_at_utc": "2026-11-26T08:51:16.396689+00:00",
+    "command": [
+      "python",
+      "load_test.py",
+      "--url",
+      "http://localhost:8002",
+      "--requests",
+      "300",
+      "--concurrency",
+      "1",
+      "--out",
+      "reports/load_v2_c1.json"
+    ],
+    "exit_code": 0
+  },
+  {
+    "started_at_utc": "2026-11-26T08:52:31.078303+00:00",
+    "command": [
+      "python",
+      "load_test.py",
+      "--url",
+      "http://localhost:8002",
+      "--requests",
+      "300",
+      "--concurrency",
+      "10",
+      "--out",
+      "reports/load_v2_c10.json"
+    ],
+    "exit_code": 0
+  },
+  {
+    "started_at_utc": "2026-11-26T08:52:39.153385+00:00",
+    "command": [
+      "python",
+      "load_test.py",
+      "--url",
+      "http://localhost:8002",
+      "--requests",
+      "300",
+      "--concurrency",
+      "50",
+      "--out",
+      "reports/load_v2_c50.json"
+    ],
+    "exit_code": 0
+  },
+  {
+    "started_at_utc": "2026-11-26T08:52:42.324191+00:00",
+    "command": [
+      "python",
+      "load_test.py",
+      "--url",
+      "http://localhost:8002",
+      "--requests",
+      "300",
+      "--concurrency",
+      "100",
+      "--out",
+      "reports/load_v2_c100.json"
+    ],
+    "exit_code": 0
+  },
+  {
+    "started_at_utc": "2026-11-26T08:52:45.502248+00:00",
+    "command": [
+      "python",
+      "load_test.py",
+      "--url",
+      "http://localhost:8002",
+      "--requests",
+      "300",
+      "--concurrency",
+      "20",
+      "--out",
+      "reports/load_v2_slow_0.json"
+    ],
+    "exit_code": 0
+  },
+  {
+    "started_at_utc": "2026-11-26T08:52:49.560205+00:00",
+    "command": [
+      "python",
+      "load_test.py",
+      "--url",
+      "http://localhost:8002",
+      "--requests",
+      "300",
+      "--concurrency",
+      "20",
+      "--out",
+      "reports/load_v2_slow_0.03.json"
+    ],
+    "exit_code": 0
+  },
+  {
+    "started_at_utc": "2026-11-26T08:52:55.153039+00:00",
+    "command": [
+      "python",
+      "load_test.py",
+      "--url",
+      "http://localhost:8002",
+      "--requests",
+      "300",
+      "--concurrency",
+      "20",
+      "--out",
+      "reports/load_v2_slow_0.1.json"
+    ],
+    "exit_code": 1
+  },
+  {
+    "started_at_utc": "2026-11-26T08:53:24.541506+00:00",
+    "command": [
+      "python",
+      "eval/run_eval.py",
+      "--url",
+      "http://localhost:8002",
+      "--min-accuracy",
+      "1.0",
+      "--baseline",
+      "reports/eval_v2.json",
+      "--out",
+      "reports/eval_v2_fixed.json"
+    ],
+    "exit_code": 0
+  },
+  {
+    "started_at_utc": "2026-11-26T08:55:40.906801+00:00",
+    "command": [
+      "python",
+      "eval/run_eval.py",
+      "--url",
+      "http://localhost:8002",
+      "--min-accuracy",
+      "1.0",
+      "--baseline",
+      "../../../reports/eval_v2_fixed.json",
+      "--out",
+      "reports/eval_ci.json"
+    ],
+    "exit_code": 0
+  }
+]
