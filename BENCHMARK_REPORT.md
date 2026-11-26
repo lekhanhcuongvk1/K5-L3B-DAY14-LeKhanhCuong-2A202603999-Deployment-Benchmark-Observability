@@ -69,7 +69,7 @@
 
 ## 4. Observability stack (production)
 
-CP8 đang bị chặn khi pull `locustio/locust:2.47.0`: Docker Hub trả HTTP 429 Too Many Requests. Chưa chạy Locust production, chưa có dashboard/trace/alert hoặc CSV scaling; không điền số ước lượng.
+CP8 đang bị chặn khi pull `locustio/locust:2.47.0` hoặc `nginx:1.28-alpine`: Docker Hub trả HTTP 429 Too Many Requests (lần thử cuối lưu ở `evidence/cp8-startup.txt`). Chưa chạy Locust production, chưa có dashboard/trace/alert hoặc CSV scaling; không điền số ước lượng.
 
 ### 4.1 Screenshot
 

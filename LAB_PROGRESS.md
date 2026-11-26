@@ -34,6 +34,13 @@
 | CP5 | Hoàn thiện `06-lab-complete/`, script gốc PASS 12/12 | Hoàn thành; 43/43 checks; evidence/cp5-production-ready.txt |
 | CP6 | Deploy agent Part 6 cùng Redis, URL public và ảnh thật | Live trên main/283bdca; đủ 4 HTTP checks đạt; còn file screenshot trong repo |
 | CP7 | Load test, eval v1/v2/fixed, quality gate, report JSON | Hoàn thành; v2 fixed 23/23, 0 regression; BENCHMARK_REPORT.md và reports/ |
-| CP8 | Grafana, Jaeger, ít nhất 2 alert cùng firing, CSV scale, đóng gói | Chưa làm |
+| CP8 | Grafana, Jaeger, ít nhất 2 alert cùng firing, CSV scale, đóng gói | Bị chặn khi tải image: Docker Hub HTTP 429; evidence/cp8-startup.txt |
 
 Không sửa script chấm hoặc golden dataset. Không ghi số đo, URL hay ảnh giả. Không commit secret. Mỗi checkpoint hoàn thành có một commit riêng; commit setup này chỉ ghi nhận bước chuẩn bị còn bị chặn.
+
+## Cần người học can thiệp để tiếp tục CP8
+
+1. Đăng nhập Docker Desktop bằng tài khoản Docker Hub của mình, rồi thử `docker pull nginx:1.28-alpine`. Nếu đã đăng nhập mà vẫn 429, báo lại kết quả; chưa thể kết luận việc đăng nhập chắc chắn khắc phục giới hạn registry.
+2. Bổ sung ba ảnh cloud vào `screenshots/` theo hướng dẫn trong thư mục đó. Bốn kiểm tra public đã PASS, nhưng chưa có các file ảnh cần nộp.
+
+Đã thử khởi động stack observability từ Windows và Ubuntu WSL2, đều gặp HTTP 429 khi lấy manifest của Locust hoặc Nginx. Chưa có container observability chạy, chưa có số đo hay ảnh CP8. Không đánh dấu checkpoint hoàn thành. Remote GitHub Actions chưa xác minh được vì API GitHub cũng trả lỗi rate limit; lệnh quality gate tương đương đã PASS ở local.

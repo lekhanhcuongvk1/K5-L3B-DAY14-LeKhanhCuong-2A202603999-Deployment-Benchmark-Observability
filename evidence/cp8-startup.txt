@@ -1,0 +1,9 @@
+ Image jaegertracing/jaeger:2.23.0 Pulling 
+ Image nginx:1.28-alpine Pulling 
+ Image locustio/locust:2.47.0 Pulling 
+ Image prom/prometheus:v3.16.0 Pulling 
+ Image grafana/grafana:13.2.4 Pulling 
+ Image nginx:1.28-alpine Error unknown: failed to resolve reference "docker.io/library/nginx:1.28-alpine": unexpected status from HEAD request to https://registry-1.docker.io/v2/library/nginx/manifests/1.28-alpine: 429 Too Many Requests
+ Image locustio/locust:2.47.0 Interrupted 
+ Image prom/prometheus:v3.16.0 Interrupted 
+Error response from daemon: unknown: failed to resolve reference "docker.io/library/nginx:1.28-alpine": unexpected status from HEAD request to https://registry-1.docker.io/v2/library/nginx/manifests/1.28-alpine: 429 Too Many Requests

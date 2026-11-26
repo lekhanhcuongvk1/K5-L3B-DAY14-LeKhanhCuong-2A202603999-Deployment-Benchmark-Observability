@@ -299,3 +299,9 @@ Mục `Public URL ready` của checker tại CP5 chỉ xác nhận config deploy
 - Codex chạy benchmark thật, đọc hai câu v2 sai rồi bổ sung tài liệu JWT/HPA vào KNOWLEDGE_BASE của develop và production. Không sửa golden dataset, load_test.py hay run_eval.py.
 - Codex chạy lại eval sau khi restart, kiểm tra baseline/quality gate, viết workflow CI và điền báo cáo từ JSON bằng script; lưu cả lượt vi phạm SLO thay vì chọn số thuận lợi.
 - Người học chưa tự sửa hay chạy lại; cần hiểu percentile, cost/câu đúng, cách gate phát hiện regression và giới hạn của mock/đo 300 request.
+
+### CP8 — lỗi khởi động stack
+
+- Codex thử chạy stack bằng project k5-day14-observability từ Windows và Ubuntu, Docker Hub trả 429 khi resolve image Locust/Nginx; lưu output thật tại evidence/cp8-startup.txt.
+- Chưa chạy được stack, chưa đo CSV scaling, dashboard, trace hoặc alert. Không bịa số và không tạo ảnh minh họa thay bằng chứng. Cần người học xử lý đăng nhập/giới hạn Docker Hub để tiếp tục.
+- Đã thử xác minh GitHub Actions sau khi push CP7, nhưng API GitHub bị rate limit; chưa khẳng định workflow remote đã PASS. Người học chưa tự kiểm tra lại.
