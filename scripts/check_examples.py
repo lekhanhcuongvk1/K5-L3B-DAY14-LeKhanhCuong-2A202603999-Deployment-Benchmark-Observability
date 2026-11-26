@@ -34,10 +34,11 @@ def request(path, body=None, headers=None, port=8000):
 
 
 @contextlib.contextmanager
-def server(directory, extra_env=None):
+def server(directory, extra_env=None, direct=False):
     with tempfile.TemporaryFile() as logs:
         proc = subprocess.Popen(
-            [sys.executable, "-m", "uvicorn", "app:app", "--host", "127.0.0.1", "--port", "8000"],
+            ([sys.executable, "app.py"] if direct else
+             [sys.executable, "-m", "uvicorn", "app:app", "--host", "127.0.0.1", "--port", "8000"]),
             cwd=ROOT / directory, env={**os.environ, **(extra_env or {})},
             stdout=logs, stderr=logs, start_new_session=True,
         )
@@ -105,7 +106,7 @@ def cp3():
 
 
 def cp4():
-    with server("05-scaling-reliability/develop") as proc:
+    with server("05-scaling-reliability/develop", direct=True) as proc:
         health, ready = request("/health"), request("/ready")
         with concurrent.futures.ThreadPoolExecutor() as pool:
             pending = pool.submit(request, "/ask?question=Long%20task", {})

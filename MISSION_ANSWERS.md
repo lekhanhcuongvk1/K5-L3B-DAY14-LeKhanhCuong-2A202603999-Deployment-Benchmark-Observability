@@ -128,6 +128,30 @@ Thiết kế Redis cho $10/tháng: dùng bucket `cost:month:YYYY-MM` (hoặc th�
 
 Rate limit bảo vệ số lần gọi trong một cửa sổ thời gian; cost guard bảo vệ tổng tiền, vì request dài/model đắt có thể tiêu nhiều dù số lần gọi thấp. API key phù hợp giao tiếp service đơn giản; JWT hỗ trợ danh tính/role/hạn dùng; OAuth2 bổ sung luồng ủy quyền khi ứng dụng cần truy cập thay người dùng.
 
+## Part 5 — Scaling & Reliability (CP4)
+
+### Exercise 5.1–5.2 — Health và graceful shutdown
+
+`/health` trả 200 khi process vẫn phục vụ được liveness; `/ready` trả 200 khi đủ dependency để nhận traffic, 503 khi startup/shutdown hoặc Redis mất kết nối. Không buộc `/health` thất bại theo Redis: restart hàng loạt agent không chữa được Redis, còn làm tăng tải khi phục hồi.
+
+Chạy bản develop bằng `python app.py` để uvicorn quản lý signal sau khi module khởi tạo. Kết quả thật trong [evidence/cp4.json](evidence/cp4.json): `/health` 200, `/ready` 200, gửi SIGTERM lúc request chạy → request vẫn **200**, process exit **0**. Khi dùng uvicorn CLI, handler SIGTERM của ví dụ được đăng ký khi import có thể che handler server; lần thử đó không thoát trong timeout. Runner đã chuyển về entry point hướng dẫn. Không dùng pattern ghi đè signal này ở Part 6.
+
+Graceful shutdown: đóng listener/ngừng nhận request mới, đợi request đang xử lý xong, chạy lifespan cleanup để đóng connection, sau đó thoát. SIGKILL không cho phép cleanup. Bản mẫu develop dùng lời gọi mock đồng bộ trong async endpoint nên có thể chặn event loop; Part 6 dùng sync endpoint để FastAPI đưa công việc vào thread pool.
+
+### Exercise 5.3–5.5 — Redis và ba instance
+
+```bash
+cd 05-scaling-reliability/production
+touch .env.local
+docker compose -p k5-day14-scaling up -d --build --scale agent=3
+python test_stateless.py
+docker compose -p k5-day14-scaling down -v
+```
+
+Đã chạy đúng script gốc và lưu [evidence/cp4-stateless.txt](evidence/cp4-stateless.txt): **5 request** của cùng một session đi qua **3 instance**; đọc history có **10 message** (5 user + 5 assistant). Nginx phân phối tới các instance; mỗi instance đọc/ghi key session chung trong Redis nên không cần sticky session. Không sửa script và không tuyên bố script tự kill container: script gốc chỉ gửi request và đọc history.
+
+Giới hạn của ví dụ: có fallback RAM khi Redis không sẵn sàng lúc khởi động, chưa an toàn để scale trong tình huống đó; update history là read-modify-write nên các request đồng thời cùng session có thể ghi đè. Thử nghiệm hiện tại là tuần tự, chứng minh chia sẻ state qua Redis giữa instance, chưa chứng minh xử lý conflict đồng thời. Part 6 không fallback RAM cho rate limit/budget. Stack CP4 đã dọn sau khi thu bằng chứng.
+
 ## AI log
 
 ### Phiên chuẩn bị — CP0
@@ -165,3 +189,8 @@ Rate limit bảo vệ số lần gọi trong một cửa sổ thời gian; cost 
 
 - Codex đọc auth/rate limiter/cost guard, chạy API key và JWT flow thật; lưu raw curl 401/200/429 cùng dãy status, không lưu credential sinh trong phiên.
 - Codex viết giải thích và thiết kế quota Redis; người học chưa tự sửa hoặc chạy lại. Runner có assertion đúng 10 lần 200 trước 429.
+
+### CP4
+
+- Codex chạy health/readiness và SIGTERM thật trên WSL, điều chỉnh entry point của runner theo code mẫu sau khi gặp timeout; chạy Compose ba replica và script stateless gốc, lưu output.
+- Codex viết phân tích giới hạn của demo và dọn stack. Người học chưa tự sửa hoặc chạy lại; cần giải thích được vì sao history đủ qua các instance.
