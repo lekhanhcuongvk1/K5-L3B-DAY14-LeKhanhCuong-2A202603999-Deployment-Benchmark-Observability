@@ -1,7 +1,6 @@
 # Benchmark & Observability Report — Day 14
 
-> CP7 và CP8 đã hoàn thành bằng số đo và ảnh service thật; sự cố Docker Hub 429 ở lần trước đã hết khi pull trực tiếp lại.
-> Số liệu CP7 lấy trực tiếp từ JSON trong reports/; lệnh và exit code ở evidence/cp7-commands.json, output ở evidence/cp7-cli.txt.
+Báo cáo trình bày kết quả đo hiệu năng, chất lượng câu trả lời và khả năng quan sát của agent. Số liệu được lấy từ JSON trong `reports/`, CSV trong `benchmark-results/` và các snapshot trong `evidence/`. Lệnh chạy cùng exit code được lưu tại `evidence/cp7-commands.json` và `evidence/cp7-cli.txt`.
 
 **Họ tên:** Lê Khánh Cường
 **Ngày chạy:** 26/11/2026 (GMT+7)
@@ -54,14 +53,14 @@
 | Cost / câu đúng (USD) | 0.00040515 | 3.599e-05 | 3.511e-05 |
 | Quality gate | FAIL (exit 1, ngưỡng 80%) | PASS (exit 0, ngưỡng 80%) | PASS (exit 0, ngưỡng 100%, 0 regression) |
 
-**Những câu v2 trả lời sai ban đầu và cách bạn sửa:**
+**Hai câu v2 trả lời sai và phần kiến thức được bổ sung:**
 
-| ID | Keyword bị thiếu | Bạn đã sửa gì |
+| ID | Keyword bị thiếu | Nội dung bổ sung |
 |---|---|---|
 | security-02 | token, hết hạn, chữ ký | Thêm tài liệu phân biệt JWT với API key, kiểm chữ ký và hạn dùng |
 | scaling-03 | cpu, memory, custom metrics | Thêm tài liệu HPA theo CPU/memory và custom metrics |
 
-**Nhận xét về trade-off chất lượng / chi phí / latency giữa v1 và v2:** v2 thêm retrieval và context nên tokens/câu tăng 57,2 → 108,7 → 115,6, p95 eval tăng 188,8 → 209 → 210,9 ms. Tổng cost tăng nhưng cost/câu đúng giảm từ 0,00040515 xuống 0,00003511 USD (khoảng 11,54 lần rẻ hơn). Cost/câu đúng đánh giá cả lượng chi phí bị lãng phí vào câu sai; token và giá là mô phỏng, không phải hóa đơn provider thật. total_cost được CLI làm tròn 6 chữ số, cost/câu đúng làm tròn 8 chữ số nên lấy tổng đã làm tròn chia số câu đúng có thể lệch nhỏ.
+**Nhận xét về trade-off chất lượng / chi phí / latency giữa v1 và v2:** v2 thêm retrieval và context nên tokens/câu tăng 57,2 → 108,7 → 115,6, p95 eval tăng 188,8 → 209 → 210,9 ms. Tổng cost tăng nhưng cost/câu đúng giảm từ 0,00040515 xuống 0,00003511 USD (khoảng 11,54 lần rẻ hơn). Cost/câu đúng đánh giá cả lượng chi phí bị lãng phí vào câu sai; token và giá là mô phỏng, không phản ánh hóa đơn thực tế của nhà cung cấp. total_cost được CLI làm tròn 6 chữ số, cost/câu đúng làm tròn 8 chữ số nên lấy tổng đã làm tròn chia số câu đúng có thể lệch nhỏ.
 
 **Quality gate:** chạy v1 với baseline v2 phát hiện 20 regression và exit code 1, lưu reports/eval_v1_regression.json. Workflow `.github/workflows/quality-gate.yml` khởi động v2 với lỗi ngẫu nhiên tắt, đợi health có timeout, chạy eval với `--min-accuracy 1.0 --baseline ../../../reports/eval_v2_fixed.json`. Bất kỳ câu sai/regression làm job fail. Đã chạy tương đương lệnh eval ở local; chưa xác nhận GitHub Actions đã thực thi. Để chặn merge bắt buộc, repository owner cần đặt job eval thành required status check trong branch protection/ruleset.
 
@@ -98,11 +97,11 @@ Locust giữ 30 users, spawn rate 5. Thời gian dưới đây đo từ lúc b�
 
 B bắt đầu tại t=82.55s của toàn thí nghiệm; hai alert cùng firing lần đầu quan sát ở t=230.19s. File `evidence/cp8-chaos-timing.json` lưu toàn bộ lần poll và `cp8-alerts-firing.json` lưu hai alert cùng firing. A và B được thực hiện nối tiếp, B giữ A để chụp cả hai alert; vì vậy B không phải thí nghiệm cô lập hoàn toàn. CSV chaos chứa cả giai đoạn recreate/DNS, không dùng làm benchmark scale chuẩn.
 
-Thí nghiệm C/D/E không chạy; không ghi thời gian firing giả. Nhận xét E từ thiết kế: đổi v2 → v1 vẫn có thể trả HTTP 200 nhanh và ít lỗi, trong khi nội dung sai. Cần golden-dataset eval/quality gate, đánh giá mẫu traffic và feedback để phát hiện; health/latency/error HTTP không đủ. Với D, pause giữ target trong DNS và làm scrape thất bại; stop có thể khiến target biến mất. Lỗi 504 ở Nginx không nhất thiết xuất hiện trong counter của agent, nên cần thêm metric ở ingress hoặc synthetic check từ bên ngoài.
+Phạm vi thực nghiệm gồm A và B. Với C/D/E, phần dưới đây chỉ phân tích từ thiết kế, chưa có số đo. Ở E, đổi v2 → v1 vẫn có thể trả HTTP 200 nhanh và ít lỗi, trong khi nội dung sai. Cần golden-dataset eval/quality gate, đánh giá mẫu traffic và feedback để phát hiện; health/latency/error HTTP không đủ. Với D, pause giữ target trong DNS và làm scrape thất bại; stop có thể khiến target biến mất. Lỗi 504 ở Nginx không nhất thiết xuất hiện trong counter của agent, nên cần thêm metric ở ingress hoặc synthetic check từ bên ngoài.
 
 ### 4.3 Debug bằng trace và log
 
-Chọn trace chậm nhất trong **mẫu 200 trace** trả bởi query đã lưu (không tuyên bố chậm nhất trong mọi trace của toàn bộ lần chạy):
+Trong **mẫu 200 trace** lấy từ query đã lưu, trace có thời gian xử lý dài nhất có các thông số sau:
 
 - Trace ID: `e5e78f66e2a1f1ce5a68d8cc6cf8d0fe`.
 - Tổng duration: **1704.737 ms**.
@@ -145,4 +144,4 @@ Scale không cải thiện throughput hay latency đáng kể ở mức 100 user
 
 Nếu vận hành thật, bổ sung queue depth, timeout/retry ở provider, Redis health, 429/402 theo quota, cache hit rate, metric ingress/synthetic availability, cost/tenant và chất lượng câu trả lời theo dataset/feedback. Chọn alert window theo mức ảnh hưởng: for=0 dễ báo động do spike, for=30m có thể phát hiện quá muộn.
 
-Đã thu bằng chứng trước khi dọn stack. Bảy ảnh là screenshot của màn hình/trang service thật; hai ảnh Render và hai ảnh span chi tiết có bản capture gốc JPEG trong evidence, chỉ đổi định dạng PNG khi đóng gói. Không dùng ảnh AI hay ảnh dựng thay kết quả.
+Bằng chứng được lưu trước khi dọn stack. Bảy ảnh chụp nằm trong `screenshots/`; ảnh Render và ảnh span chi tiết có bản JPEG gốc trong `evidence/`, được chuyển sang PNG để thống nhất định dạng nộp bài.
