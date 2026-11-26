@@ -32,7 +32,7 @@
 | CP3 | Part 4: bằng chứng HTTP 401/200/429, giải thích cost guard | Hoàn thành; evidence/cp3.json và cp3-http.txt |
 | CP4 | Part 5: health/readiness, shutdown, test 3 instance dùng Redis | Hoàn thành; evidence/cp4.json và cp4-stateless.txt |
 | CP5 | Hoàn thiện `06-lab-complete/`, script gốc PASS 12/12 | Hoàn thành; 43/43 checks; evidence/cp5-production-ready.txt |
-| CP6 | Deploy agent Part 6 cùng Redis, URL public và ảnh thật | Đã Live trên main/283bdca; public health 200, ready 200, thiếu key 401; chờ key local và ảnh |
+| CP6 | Deploy agent Part 6 cùng Redis, URL public và ảnh thật | Live trên main/283bdca; đủ 4 HTTP checks đạt; còn file screenshot trong repo |
 | CP7 | Load test, eval v1/v2/fixed, quality gate, report JSON | Chưa làm |
 | CP8 | Grafana, Jaeger, ít nhất 2 alert cùng firing, CSV scale, đóng gói | Chưa làm |
 

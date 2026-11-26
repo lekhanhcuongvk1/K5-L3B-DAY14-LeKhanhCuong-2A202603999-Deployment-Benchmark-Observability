@@ -94,7 +94,7 @@ Windows từ chối bind host port 80. Đã sửa mapping thành `127.0.0.1:${HT
 
 URL public: https://k5-l3b-day14-lekhanhcuong-2a202603999.onrender.com . Người học tạo Web Service trực tiếp trên Render, theo dõi nhánh `main` sau khi merge `cuonglk`; ảnh deploy xác nhận Live từ commit `283bdca` lúc 15:41:29 GMT+7 ngày 26/11/2026. Root `06-lab-complete`, Dockerfile và context tương ứng.
 
-Codex kiểm tra trực tiếp lúc 15:45 GMT+7: `/health` **200**, `/ready` **200**, JSON `POST /ask` không key **401**. Bằng chứng: [evidence/cp6-public-partial.json](evidence/cp6-public-partial.json). Còn `/ask` có key và đủ ảnh trong repo; chưa đánh dấu CP6 hoàn thành. Trạng thái chi tiết: [DEPLOYMENT.md](DEPLOYMENT.md).
+Codex kiểm tra đủ bốn endpoint lúc 15:49 GMT+7: `/health` **200**, `/ready` **200**, JSON `POST /ask` không key **401**, có key **200** với answer và usage. Key được đọc từ file .env riêng của người học, không ghi vào output hoặc git. Bằng chứng: [evidence/cp6-public.json](evidence/cp6-public.json), complete=true và passed=true. Còn đủ ảnh trong repo trước khi đánh dấu toàn bộ deliverable CP6 hoàn thành. Trạng thái chi tiết: [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ### So sánh Railway và Render config
 
@@ -277,3 +277,8 @@ Mục `Public URL ready` của checker tại CP5 chỉ xác nhận config deploy
 - Người học đã cấu hình Render trên dashboard, gửi ảnh Live và URL public. Theo yêu cầu người học, Codex merge cuonglk vào main và push merge commit 283bdca trước khi deploy.
 - Codex gọi endpoint thật, lưu bằng chứng ba kiểm tra không cần key; bổ sung chế độ public-only và đọc file env riêng cho script để không yêu cầu gửi credential qua chat.
 - Đã chuẩn bị file .env local bị gitignore, key còn trống. Chưa kiểm tra request có key; chưa thu đủ file screenshot trong repo. Người học cần điền key hiện tại vào file riêng và cung cấp ảnh đã che credential để tiếp tục hoàn tất CP6.
+
+### CP6 — xác thực public hoàn tất
+
+- Người học điền key vào .env riêng và xác nhận đã lưu. Codex chạy script đọc file này trong WSL2: health 200, ready 200, thiếu key 401, có key 200.
+- Lưu report JSON không có key; kiểm tra Git chỉ thêm report và tài liệu, không thêm .env. Còn file ảnh minh chứng cloud trong repo; người học chưa tự chạy lại script.

@@ -1,21 +1,21 @@
 # Deployment Information — CP6
 
-**Trạng thái:** service đã deploy thành công trên Render từ nhánh `main`, commit `283bdca` (theo ảnh deploy người học cung cấp). Đã xác minh trực tiếp ba endpoint không cần key; còn kiểm tra `/ask` có key và đóng gói đủ ảnh trước khi xác nhận CP6 hoàn thành.
+**Trạng thái:** service đã deploy thành công trên Render từ nhánh `main`, commit `283bdca` (theo ảnh deploy người học cung cấp). Đã xác minh trực tiếp đủ bốn endpoint, gồm request có API key. Còn đóng gói đủ ảnh trong repo trước khi xác nhận toàn bộ deliverable CP6 hoàn thành.
 
 ## Public URL và kết quả đã xác minh
 
 https://k5-l3b-day14-lekhanhcuong-2a202603999.onrender.com
 
-Kiểm tra lúc **15:45 ngày 26/11/2026 (GMT+7)**, bằng script gửi JSON hợp lệ:
+Kiểm tra đầy đủ lúc **15:49 ngày 26/11/2026 (GMT+7)**, bằng script gửi JSON hợp lệ và đọc key từ file .env riêng:
 
 | Kiểm tra | HTTP | Body |
 | --- | ---: | --- |
 | GET /health | 200 | `{"status":"ok"}` |
 | GET /ready | 200 | `{"ready":true}` |
 | POST /ask thiếu API key | 401 | `{"detail":"Missing or invalid API key"}` |
-| POST /ask có API key | Chưa kiểm tra | Chờ key trong file riêng trên máy |
+| POST /ask có API key | 200 | Có answer và usage; không lưu key |
 
-Bằng chứng thật: [evidence/cp6-public-partial.json](evidence/cp6-public-partial.json). File ghi rõ `complete=false`, không coi ba kiểm tra là hoàn thành cả checkpoint. Readiness 200 xác nhận agent ping Redis thành công ở thời điểm kiểm tra.
+Bằng chứng đầy đủ: [evidence/cp6-public.json](evidence/cp6-public.json), có `complete=true`, `passed=true`. Bằng chứng ba kiểm tra trước đó giữ riêng ở `evidence/cp6-public-partial.json`. Readiness 200 xác nhận agent ping Redis thành công ở thời điểm kiểm tra.
 
 ## Cấu hình triển khai
 
@@ -36,7 +36,7 @@ Theo [giới hạn Render Free](https://render.com/docs/free), Free Key Value kh
 | --- | --- |
 | PORT | 8000, Docker CMD đọc động |
 | ENVIRONMENT | production |
-| AGENT_API_KEY | Giá trị riêng trên Render; chưa dùng để kiểm tra xác thực thành công |
+| AGENT_API_KEY | Giá trị riêng trên Render; đã kiểm tra xác thực thành công, không lưu trong git |
 | REDIS_URL | URL Redis nội bộ; /ready đã trả 200 |
 | RATE_LIMIT_PER_MINUTE | 10 |
 | DAILY_BUDGET_USD | 1 |
@@ -45,7 +45,7 @@ Theo [giới hạn Render Free](https://render.com/docs/free), Free Key Value kh
 
 ## Hoàn tất kiểm tra có xác thực
 
-File local `06-lab-complete/.env` đã được chuẩn bị với BASE thật và ô AGENT_API_KEY trống. Người học điền key hiện tại của Render vào file riêng này; `.gitignore` đã xác nhận loại trừ file. Không gửi key qua chat hoặc đưa ảnh chứa key vào bài nộp. Sau đó chạy trong môi trường Python lab từ gốc repo:
+Người học đã điền key hiện tại vào file local `06-lab-complete/.env`; `.gitignore` đã xác nhận loại trừ file. Không gửi key qua chat hoặc đưa ảnh chứa key vào bài nộp. Chạy lại trong môi trường Python lab từ gốc repo:
 
 ```bash
 python scripts/check_public.py --env-file 06-lab-complete/.env
